@@ -238,7 +238,7 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 %\begin{itemize}
 %\item Sample \alert{O(n)}
 %	\begin{itemize}
-%		\item Computer all pair of distances: $O((n^{2/3})^2) = O(n^{4/3})$
+%		\item Computer all pair of distances: $O((n^{2/3})^2) = O(n^{frac{4}{3}})$
 %		\item Divide \& Conquer: $O(n^{2/3}\log n^{2/3}) = O(n^{2/3}\log n) \subset O(n)$
 %		\item Other approach?
 %	\end{itemize}
@@ -254,15 +254,26 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 %\end{frame}
 
 \begin{frame}{Sample}
-How to calculate the shortest distance between samples?
+%How to calculate the shortest distance between samples?
 \begin{itemize}
-	\item fa
-	
+		\item Computer all pair of distances: $O((n^{frac{2}{3}})^2) = O(n^{frac{4}{3}})$
+		\item Divide \& Conquer: $O(n^{frac{2}{3}}\log n^{frac{2}{3}}) = O(n^{frac{2}{3}}\log n) \subset O(n)$ \\
+		More samples possible: 
+		\item Other approach?
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Partition}
+	\begin{itemize}
+		\item At most $n$ cells contain point
+		\item Map points to their cells, then hashing
+		\item Divide the coordinates by cell length and truncate them to integer.
+		\item $O(n)$
+	\end{itemize}
+\end{frame}
 
-\begin{frame}{Hashing}
+\begin{frame}{Compute}
+
 
 \end{frame}
 
