@@ -1,0 +1,223 @@
+Seminarthemen (unausgarbeitet)
+************************************
+Daniel Schmid!
+Strong Scaling of Matrix Multiplication Algorithms and
+Memory-Independent Communication Lower Bounds
+(Brief Announcement, SPAA 2012)
+Grey Ballard, James Demmel, Olga Holtz, Benjamin Lipshitz, and Oded Schwartz
+
+-------------------------------------------------------
+Bastian Pirk
+@inproceedings{tsigas2003simple,
+  title={A simple, fast parallel implementation of quicksort and its performance evaluation on SUN enterprise 10000},
+  author={Tsigas, Philippas and Zhang, Yi},
+  booktitle={Parallel, Distributed and Network-Based Processing, 2003. Proceedings. Eleventh Euromicro Conference on},
+  pages={372--381},
+  year={2003},
+  organization={IEEE}
+}
+------------------------------------------------------
+Luben Alexandrov!
+
+A simple, fast and scalable non-blocking concurrent fifo queue for shared memory multiprocessor systems
+Authors
+Philippas Tsigas, Yi Zhang
+Publication date
+2001/7/3
+Conference name
+Proceedings of the thirteenth annual ACM symposium on Parallel algorithms and architectures
+Pages
+134-143
+Publisher
+ACM
+Description
+Abstract A non-blocking FIFO queue algorithm for multiprocessor shared memory systems is
+presented in this paper. The algorithm is very simple, fast and scales very well in both
+symmetric and non-symmetric multiprocessor shared memory systems. Experiments on a 64-
+node SUN Enterprise 10000—a symmetric multiprocessorsystem—and on a 64-node SGI
+Origin 2000—a cache coherent non uniform memory access multiprocessorsystem—
+indicate that our algorithm considerably outperforms the best of the known alternatives in ...
+http://dl.acm.org/citation.cfm?id=378611
+
+
+----------------------------------------------------------------------------
+Tobias Zirr!
+scholar.google.com/citations?view_op=view_citation&hl=en&user=Z6nLCukAAAAJ&citation_for_view=Z6nLCukAAAAJ:u-x6o8ySG0sC
+Title
+Scans as primitive parallel operations
+Authors
+Guy E. Blelloch
+Publication date
+1989/11
+Journal name
+Computers, IEEE Transactions on
+Volume
+38
+Issue
+11
+Pages
+1526-1538
+Publisher
+IEEE
+Description
+Abstract A study of the effects of adding two scan primitives as unit-time primitives to PRAM
+(parallel random access machine) models is presented. It is shown that the primitives
+improve the asymptotic running time of many algorithms by an O (log n) factor, greatly
+simplifying the description of many algorithms, and are significantly easier to implement than
+memory references. It is argued that the algorithm designer should feel free to use these
+operations as if they were as cheap as a memory reference. The author describes five ...
+----------------------------------------------------------------------------------------
+Yvonne Braun
+
+http://scholar.google.com/citations?view_op=view_citation&hl=en&user=uXUA1pgAAAAJ&citation_for_view=uXUA1pgAAAAJ:EkHepimYqZsC
+
+Title
+Fast shared-memory algorithms for computing the minimum spanning forest of sparse graphs
+Authors
+David A Bader, Guojing Cong
+Publication date
+2006/11/30
+Journal name
+Journal of Parallel and Distributed Computing
+Volume
+66
+Issue
+11
+Pages
+1366-1378
+Publisher
+Academic Press
+Description
+Minimum spanning tree (MST) is one of the most studied combinatorial problems with
+practical applications in VLSI layout, wireless communication, and distributed networks,
+recent problems in biology and medicine such as cancer detection, medical imaging, and
+proteomics, and national security and bioterrorism such as detecting the spread of toxins
+through populations in the case of biological/chemical warfare. Most of the previous attempts
+for improving the speed of MST using parallel computing are too complicated to ...
+
+---------------------------------------------------------------------------------------
+ Ge Wu!
+http://rjlipton.wordpress.com/2009/03/01/rabin-flips-a-coin/
+
+entwickeln und präsentieren Sie einen parallelen Algorthmus für das closest-pair Problem, der
+mit linearer Arbeit auskommt
+--------------------------------------------------------------------------------------
+Tobias Meyer und Vitaly Henne
+
+* Graph500 Challenge
+
+        Präsentierung und was ist der Stand der Technik
+
+http://www.graph500.org/
+--------------------------------------------------------------------------------
+Top 500
+
+wie wird die LU Dekomposition dahinter heutzutage parallelisiert ?
+
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+Themen aus Kumar, Karypis et. al (Introduction to Parallel Computing)
+
+* Embedding other Networks into a Hypercube
+
+        Bei der Arbeit werden die MÃ¶glichkeiten betrachtet, Netzerke der Form linearer
+        Ketten, Gitter und BinÃ¤rbÃ¤ume in ein Hypercube einzubetten, und die Vorteile der
+        Abbildungen untersucht.
+
+        (Kapitel 2.5 in Kumar, Karypis et. al, Introduction to Parallel Computing)
+--------------------------------------------------------------------------------
+
+* Isoeffizienz als MaÃŸ der Skalierbarkeit 
+
+        Parallele Algorithmen kÃ¶nnen meist ihre Effizienz bei ErhÃ¶hen der
+        Prozessorenzahl nur bei gleichzeitiger ErhÃ¶hung der EingabegrÃ¶ÃŸe erhalten. Mit
+        der Isoeffizienz wird dieses MaÃŸ an Skalierbarkeit formalisiert.
+
+        (Kapitel 4.4 in Kumar, Karypis et. al, Introduction to Parallel Computing)
+-------------------------------------------------------------------------------
+Alexander Hantelmann!
+* Parallelisierung von Dynamischer Programmierung 
+
+        Algorithmen basierende auf dynamischer Programmierung sind oft leicht
+        parallelisierbar. In der Arbeit sollen vier Klassen von dynamischen
+        Programmierungsalgorithem betrachtet werden, zu denen generische
+        parallele Algorithmenschemas angegeben werden kÃ¶nnen. Von den vier
+        Klassen sollen Algorithmen zu zwei genauer vorgestellt werden.
+
+        (Kapitel 9 in Kumar, Karypis et. al, Introduction to Parallel Computing)
+--------------------------------------------------------------------------------
+
+* AusgewÃ¤hlte Teile aus Solving sparse Systems of Linear Equations
+
+        Vorstellung selbst ausgewählter Themen im Rahmen der vorgegebenen
+        Vortragszeit aus den Kapiteln 11.1 und 11.2 des Lehrbuchs.
+
+        (Kapitel 11.1 und 11.2 in Kumar, Karypis et. al, Introduction to Parallel Computing)
+--------------------------------------------------------------------------------
+Emanuel Schrade!
+
+@techreport{Satish08,
+    author = {Nadathur Satish and Mark Harris and Michael Garland},
+    title = {Designing Efficient Sorting Algorithms for Manycore {GPUs}},
+    month = sep,
+    year = 2008,
+    institution = {NVIDIA Corporation},
+    type = {NVIDIA Technical Report},
+    number = {NVR-2008-001},
+}
+--------------------------------------------------------------------------------
+Valentin Buchhold!
+@article{DeanG10,
+  author    = {Jeffrey Dean and
+               Sanjay Ghemawat},
+  title     = {MapReduce: a flexible data processing tool},
+  journal   = {Commun. ACM},
+  volume    = {53},
+  number    = {1},
+  year      = {2010},
+  pages     = {72--77},
+  ee        = {http://doi.acm.org/10.1145/1629175.1629198},
+  bibsource = {DBLP, http://dblp.uni-trier.de}
+}
+----------------------------------------------------
+@Article{KarZha93,
+  author =       "R. M. Karp and Y. Zhang",
+  title =        "Parallel Algorithms for Backtrack Search and
+                  Branch-and-Bound",
+  journal =      jacm,
+  year =         1993,
+  volume =       40,
+  number =       3,
+  pages =        "765--789",
+
+}
+@TechReport{Ran90,
+  author = 	 "A. Ranade",
+  title = 	 "A Simpler Analysis of the {K}arp-{Z}hang Parallel
+		  Branch-and-Bound Method",
+  institution =  "University of California Berkeley",
+  year = 	 1990,
+  annote =	 "Analyse von Karp/Zhangs Algorithumus verbessert
+		  (Isoeffizienzfunktion n log n) und Beweis braucht
+		  nur 3 Seiten. Deley Sequence Argument"
+}
+---------------------------------------------------
+Valentin Buchhold: MapReduce
+Emanuel Schrade: Manycore Sorting
+Alexander Hantelmann: Dynamische Programmierung
+Tobias Meyer und Vitaly Henne: Graph500 Challenge
+Ge Wu: closest pair
+Yvonne Braun: minimum spanning forest
+Tobias Zirr: scans
+Luben Alexandrov: FIFOs
+Bastian Pirk: quicksort
+Daniel Schmid: strong scaling of matrix multiplication
+
+Noch frei:
+Top 500 Benchmark
+Embedding other Networks into a Hypercube
+Isoeffizienz als MaÃŸ der Skalierbarkeit 
+Solving sparse Systems of Linear Equations
+Branch-and-Bound a la Karp Zhang

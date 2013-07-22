@@ -1,0 +1,315 @@
+%% TODO:
+%% adjust consistent style, variable name
+%% remove the most colons (not necessary)
+
+%% LaTeX-Beamer template for KIT design
+%% by Erik Burger, Christian Hammer
+%% title picture by Klaus Krogmann
+%%
+%% version 2.1
+%%
+%% mostly compatible to KIT corporate design v2.0
+%% http://intranet.kit.edu/gestaltungsrichtlinien.php
+%%
+%% Problems, bugs and comments to
+%% burger@kit.edu
+
+\documentclass[18pt]{beamer}
+
+%% SLIDE FORMAT
+
+% use 'beamerthemekit' for standard 4:3 ratio
+% for widescreen slides (16:9), use 'beamerthemekitwide'
+
+\usepackage{templates/beamerthemekit}
+% \usepackage{templates/beamerthemekitwide}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usetikzlibrary{arrows,shapes}
+\usetikzlibrary{snakes}
+\setbeamercolor{alerted text}{fg=red} 
+%% TITLE PICTURE
+
+% if a custom picture is to be used on the title page, copy it into the 'logos'
+% directory, in the line below, replace 'mypicture' with the 
+% filename (without extension) and uncomment the following line
+% (picture proportions: 63 : 20 for standard, 169 : 40 for wide
+% *.eps format if you use latex+dvips+ps2pdf, 
+% *.jpg/*.png/*.pdf if you use pdflatex)
+
+%\titleimage{mypicture}
+
+%% TITLE LOGO
+
+% for a custom logo on the front page, copy your file into the 'logos'
+% directory, insert the filename in the line below and uncomment it
+
+%\titlelogo{mylogo}
+
+% (*.eps format if you use latex+dvips+ps2pdf,
+% *.jpg/*.png/*.pdf if you use pdflatex)
+
+%% TikZ INTEGRATION
+
+% use these packages for PCM symbols and UML classes
+% \usepackage{templates/tikzkit}
+% \usepackage{templates/tikzuml}
+
+
+% the presentation starts here
+
+\title[Parallel Algorithm for Closest Pair Problem]{Parallel Algorithm for Closest Pair Problem}
+\subtitle{}
+\author{Ge Wu}
+
+\institute{Institute for Theoretical Informatics}
+
+% Bibliography
+
+\usepackage[citestyle=authoryear,bibstyle=numeric,hyperref]{biblatex}
+ 
+\addbibresource{templates/example.bib}
+\bibhang1em
+
+\begin{document}
+
+% change the following line to "ngerman" for German style date and logos
+\selectlanguage{english}
+
+%title page
+\begin{frame}
+\titlepage
+\end{frame}
+
+%table of contents
+%\begin{frame}{Gliederung}
+%\tableofcontents
+%\end{frame}
+
+\section{Problem Description}
+
+\begin{frame}{Problem Description}
+\begin{block}{Closest Pair Problem}
+\begin{itemize}
+\item Given $n$ \textbf{different unordered} points $P = \{p_1,p_2, ... ,p_n\}$ in \textbf{unit square}: \\
+$$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
+\item Find a pair of points with the smallest distance between them.
+\item Find any pair if there's a tie.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Background}
+
+\end{frame}
+
+\tikzstyle{st1}=[fill=blue,circle,inner sep=1pt]
+\tikzstyle{st2}=[fill=red,circle,inner sep=1pt]
+\tikzstyle{st3}=[fill=green,circle,inner sep=1pt]
+
+\begin{frame}{Algorithm}	
+\begin{columns}
+\column{0.45\textwidth}
+	\begin{itemize}
+		
+			\item<alert@2-3> Sample \textcolor{black}{($\boldsymbol{n^{2/3}}$ Points from $P$)}
+%				\hspace{1em}$\color{black}{S = \{s_1,...,s_{\alert{\boldsymbol{n^{2/3}}}}\} \subset P}$ \\
+%				\hspace{1em}$\color{black}{\delta = min(dist(s_i, s_j))}$
+			\item<alert@4> Partition
+			\item<alert@5-> Compute
+	\end{itemize}
+\column{0.55\textwidth}
+
+	\begin{tikzpicture}[remember picture, scale = 5]
+	\draw [<->] (0,1.1) node (yaxis) [above] {$y$} |- (1.1,0) node (xaxis) [right] {$x$};	      
+	\coordinate (c0) at (0,0);  
+    \coordinate (c) at (1,1);
+    
+    \coordinate (la) at (-0.01, 0.148);
+    \coordinate (la0) at (-0.01, 0);
+    \coordinate (lam) at (-0.02, 0.074);
+    
+	\coordinate (cc22) at (0.2986,0.2986);
+	\coordinate (cc23) at (0.2986,0.4479);
+	\coordinate (cc24) at (0.2986,0.5972);
+	\coordinate (cc25) at (0.2986,0.7465);
+	\coordinate (cc32) at (0.4479,0.2986);
+	\coordinate (cc33) at (0.4479,0.4479);
+	\coordinate (cc34) at (0.4479,0.5972);
+	\coordinate (cc35) at (0.4479,0.7465);
+	\coordinate (cc42) at (0.5972,0.2986);
+	\coordinate (cc43) at (0.5972,0.4479);
+	\coordinate (cc44) at (0.5972,0.5972);
+	\coordinate (cc45) at (0.5972,0.7465);
+	\coordinate (cc52) at (0.7465,0.2986);
+	\coordinate (cc53) at (0.7465,0.4479);
+	\coordinate (cc54) at (0.7465,0.5972);
+	\coordinate (cc55) at (0.7465,0.7465);
+    
+    
+	\draw[dashed] (yaxis |- c) node[left] {$1$}
+        -| (xaxis -| c) node[below] {$1$};
+    \draw (0,0) node[left,below] {$0$};
+        
+\node[st1](p1) at (0.10802,0.20208){};
+\node[st1](p2) at (0.517,0.45389){};
+\node[st1](p3) at (0.14316,0.42791){};
+\node[st1](p4) at (0.55937,0.96605){};
+\node[st1](p5) at (0.15796,0.62006){};
+\node[st1](p6) at (0.76668,0.59539){};
+\node[st1](p7) at (0.84871,0.72016){};
+\node[st1](p8) at (0.91682,0.3469){};
+\node[st1](p9) at (0.98697,0.51699){};
+\node[st1](p10) at (0.50513,0.55669){};
+\node[st1](p11) at (0.27142,0.1565){};
+\node[st1](p12) at (0.10075,0.56206){};
+\node[st1](p13) at (0.50785,0.6948){};
+\node[st1](p14) at (0.58561,0.42646){};
+\node[st1](p15) at (0.76289,0.83627){};
+\node[st1](p16) at (0.082963,0.73139){};
+\node[st1](p17) at (0.6616,0.36003){};
+\node[st1](p18) at (0.81698,0.25421){};
+\node[st1](p19) at (0.17105,0.38639){};
+\node[st1](p20) at (0.93856,0.77555){};
+\node[st1](p21) at (0.59048,0.73427){};
+\node[st1](p22) at (0.44063,0.43028){};
+\node[st1](p23) at (0.94192,0.69375){};
+\node[st1](p24) at (0.65591,0.94521){};
+\node[st1](p25) at (0.45195,0.78423){};
+\node[st1](p26) at (0.3397,0.70557){};
+\node[st1](p27) at (0.53262,0.10933){};
+	\end{tikzpicture}	
+	
+	\begin{tikzpicture}[remember picture, overlay]
+	\node<2-3> at (p1) [st2] {};	
+	\node<2-3> at (p2) [st2] {};	
+	\node<2-3> at (p3) [st2] {};	
+	\node<2-3> at (p4) [st2] {};	
+	\node<2-3> at (p5) [st2] {};	
+	\node<2-3> at (p6) [st2] {};	
+	\node<2-3> at (p7) [st2] {};	
+	\node<2-3> at (p8) [st2] {};	
+	\node<2-3> at (p9) [st2] {};	
+
+	\path <3> [draw,thick] (p6) -- node [right]{$\delta$}(p7);
+
+	\draw<4-12>[step= 0.7466, gray, very thin, dashed, xshift =12.5pt, yshift = 6.5pt] (c0) grid (c);	
+	\draw<4> [snake=brace, thick] (la0) -- (la);	
+	\draw<4> (lam) node[left] {$\delta$};
+	
+	\draw<5-12>[thick] (cc33) rectangle (cc44);
+	\node<5-12> at (p2) [st2] {};	
+	\node<5-12> at (p10) [st2] {};		
+	
+	\draw<5>[thick] (cc24) rectangle (cc35);
+	\node<5> at (p26) [st3] {};	
+
+	\draw<6>[thick] (cc34) rectangle (cc45);	
+	\node<6> at (p13) [st3] {};	
+	\node<6> at (p21) [st3] {};		
+	
+	\draw<7>[thick] (cc44) rectangle (cc55);	
+	
+	\draw<8>[thick] (cc43) rectangle (cc54);		
+	
+	\draw<9>[thick] (cc42) rectangle (cc53);
+	\node<9> at (p17) [st3] {};
+	
+	\draw<10>[thick] (cc32) rectangle (cc43);
+	\node<10> at (p14) [st3] {};	
+
+	\draw<11>[thick] (cc22) rectangle (cc33);
+	\node<11> at (p22) [st3] {};
+	
+	\draw<12>[thick] (cc23) rectangle (cc34);
+	
+	\node<13> at (p3) [st2] {};
+	\node<13> at (p19) [st2] {};
+	\end{tikzpicture}
+	
+\end{columns}
+\end{frame}
+
+%\begin{frame}{Running Time}
+%\begin{itemize}
+%\item Sample \alert{O(n)}
+%	\begin{itemize}
+%		\item Computer all pair of distances: $O((n^{2/3})^2) = O(n^{4/3})$
+%		\item Divide \& Conquer: $O(n^{2/3}\log n^{2/3}) = O(n^{2/3}\log n) \subset O(n)$
+%		\item Other approach?
+%	\end{itemize}
+%\item Partition \alert{O(n)}
+%	\begin{itemize}
+%		\item At most $n$ cells contain point
+%		\item Map points to their cells, then hashing
+%		\item Divide the coordinates by grid step and truncate to integer.
+%	\end{itemize}
+%\item Compute \alert{O(n)}
+%$$O(\sum_{i \in K} f_i) \subset O(n)$$
+%\end{itemize}
+%\end{frame}
+
+\begin{frame}{Sample}
+How to calculate the shortest distance between samples?
+\begin{itemize}
+	\item fa
+	
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Hashing}
+
+\end{frame}
+
+\begin{frame}{Another Approach for Step 1}
+
+\end{frame}
+
+\begin{frame}{Parallelization}
+
+\end{frame}
+
+\begin{frame}{Proof}
+
+\end{frame}
+%
+%\begin{frame}{Q \& A}
+%\begin{center}
+%\Large{\textbf{Thank You for Your Attention}}
+%\end{center}
+%\end{frame}
+
+\appendix
+\beginbackup
+
+
+\nocite{major}
+\nocite{dietzfelbinger1997reliable}
+\nocite{fortune1978note}
+\nocite{chap13}
+\nocite{web}
+\nocite{khuller1995simple}
+\nocite{Bentley:1976:DMS:800113.803652}
+
+\begin{frame}[allowframebreaks]{Reference}
+\printbibliography
+\end{frame}
+
+
+\begin{frame}{Load Balancing in Step 3}
+testc
+\end{frame}
+
+\begin{frame}{Implementation of Hashing}
+
+\end{frame}
+
+
+\backupend
+
+\end{document}
