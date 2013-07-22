@@ -32,6 +32,9 @@
 \usetikzlibrary{arrows,shapes}
 \usetikzlibrary{snakes}
 \setbeamercolor{alerted text}{fg=red} 
+
+\def \loose {15pt}
+
 %% TITLE PICTURE
 
 % if a custom picture is to be used on the title page, copy it into the 'logos'
@@ -115,9 +118,9 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 \begin{columns}
 \column{0.45\textwidth}
 	\begin{itemize}
-		
-			\item<alert@2-3> Sample \textcolor{black}{($\boldsymbol{n^{2/3}}$ Points from $P$)}
-%				\hspace{1em}$\color{black}{S = \{s_1,...,s_{\alert{\boldsymbol{n^{2/3}}}}\} \subset P}$ \\
+			\setlength{\itemsep}{\loose}
+			\item<alert@2-3> Sample \textcolor{black}{($\boldsymbol{n^{\frac{2}{3}}}$ Points from $P$)}
+%				\hspace{1em}$\color{black}{S = \{s_1,...,s_{\alert{\boldsymbol{n^{\frac{2}{3}}}}}\} \subset P}$ \\
 %				\hspace{1em}$\color{black}{\delta = min(dist(s_i, s_j))}$
 			\item<alert@4> Partition
 			\item<alert@5-> Compute
@@ -238,8 +241,8 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 %\begin{itemize}
 %\item Sample \alert{O(n)}
 %	\begin{itemize}
-%		\item Computer all pair of distances: $O((n^{2/3})^2) = O(n^{frac{4}{3}})$
-%		\item Divide \& Conquer: $O(n^{2/3}\log n^{2/3}) = O(n^{2/3}\log n) \subset O(n)$
+%		\item Computer all pair of distances: $O((n^{\frac{2}{3}})^2) = O(n^{\frac{4}{3}})$
+%		\item Divide \& Conquer: $O(n^{\frac{2}{3}}\log n^{\frac{2}{3}}) = O(n^{\frac{2}{3}}\log n) \subset O(n)$
 %		\item Other approach?
 %	\end{itemize}
 %\item Partition \alert{O(n)}
@@ -255,31 +258,44 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 
 \begin{frame}{Sample}
 %How to calculate the shortest distance between samples?
-\begin{itemize}
-		\item Computer all pair of distances: $O((n^{frac{2}{3}})^2) = O(n^{frac{4}{3}})$
-		\item Divide \& Conquer: $O(n^{frac{2}{3}}\log n^{frac{2}{3}}) = O(n^{frac{2}{3}}\log n) \subset O(n)$ \\
-		More samples possible: 
+	\begin{itemize}
+	\setlength{\itemsep}{\loose}
+		\item Computer all pair of distances: $O((n^{\frac{2}{3}})^2) = O(n^{\frac{4}{3}})$
+		\item Divide \& Conquer: $O(n^{\frac{2}{3}}\log n^{\frac{2}{3}}) = O(n^{\frac{2}{3}}\log n) \subset O(n)$ \\
+		\hspace{1em} More samples possible: $O(\frac{n}{\log n} \log \frac{n}{\log n}) \subset O(n) $
 		\item Other approach?
-\end{itemize}
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{Partition}
 	\begin{itemize}
-		\item At most $n$ cells contain point
-		\item Map points to their cells, then hashing
-		\item Divide the coordinates by cell length and truncate them to integer.
-		\item $O(n)$
+		\setlength{\itemsep}{\loose}
+		\item Map points to the cells
+		\item Divide the coordinates by cell length and truncate them to integer
+
+%		\item At most $n$ cells contain point
+		\item Partition $\mathbb{D} = \{D_1, D_2, ..., D_k\}$ and $f_i = |D_i|$, subject to:
+			 $$\bigcup_{i=1}^k D_i = P, D_i \cap D_j = \emptyset, k <= n$$
+				\item $O(n)$ with hashing
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Compute}
+	\begin{itemize}
+		\setlength{\itemsep}{\loose}
+		\item Compute distances of all pairs
+		\item tre
+	\end{itemize}
+	\begin{theorem}{test}
+		fsa
+	\end{theorem}
+\end{frame}
 
+\begin{frame}{Alternative Approach for Sampling}
 
 \end{frame}
 
-\begin{frame}{Another Approach for Step 1}
 
-\end{frame}
 
 \begin{frame}{Parallelization}
 
