@@ -42,6 +42,11 @@
   urldate = {2013-07-15}
 }
 
+@online{web2,
+  url={http://www.cse.ust.hk/tcsc/comp670r/Class_1_Notes.ppt/},
+  urldata = {2013-07-15}
+}
+
 @inproceedings{Bentley:1976:DMS:800113.803652,
  author = {Bentley, Jon Louis and Shamos, Michael Ian},
  title = {Divide-and-conquer in multidimensional space},

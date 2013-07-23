@@ -28,9 +28,14 @@
 
 \usepackage{tikz}
 \usepackage{amsmath}
+\usepackage{amsfonts, amsbsy, amssymb}
+\usepackage{bbm}
 \usepackage{verbatim}
-\usetikzlibrary{arrows,shapes}
-\usetikzlibrary{snakes}
+
+\usepackage{lineno}
+\usepackage{xcolor}
+
+\usetikzlibrary{arrows,shapes,snakes}
 \setbeamercolor{alerted text}{fg=red} 
 
 \def \loose {15pt}
@@ -73,7 +78,7 @@
 
 % Bibliography
 
-\usepackage[citestyle=authoryear,bibstyle=numeric,hyperref]{biblatex}
+\usepackage[citestyle=authoryear,bibstyle=alphabetic,hyperref]{biblatex}
  
 \addbibresource{templates/example.bib}
 \bibhang1em
@@ -98,144 +103,151 @@
 \begin{frame}{Problem Description}
 \begin{block}{Closest Pair Problem}
 \begin{itemize}
-\item Given $n$ \textbf{different unordered} points $P = \{p_1,p_2, ... ,p_n\}$ in \textbf{unit square}: \\
+\item Given $n$ \textbf{different} unordered points $P = \{p_1,p_2, ... ,p_n\}$ in \textbf{unit square}: \\
 $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
-\item Find a pair of points with the smallest distance between them.
+\item Find a pair of points with closest euclidean distance between them
 \item Find any pair if there's a tie.
 \end{itemize}
 \end{block}
 \end{frame}
 
 \begin{frame}{Background}
-
+\begin{itemize}
+	\setlength{\itemsep}{\loose}
+	\item O(n log n) lower bound in comparison tree model
+	\item 1976  Rabin proves that + floor function + randomness = > O(n) expected time
+ 	\item 1979  Steven Fortune and John E. Hopcroft + floor function but no randomness => O(n loglog n)
+ 	\item 1995  Samir Khuller and Yossi Matias Another O(n) algorithm that uses the floor function and randomization
+\end{itemize}
 \end{frame}
 
 \tikzstyle{st1}=[fill=blue,circle,inner sep=1pt]
 \tikzstyle{st2}=[fill=red,circle,inner sep=1pt]
 \tikzstyle{st3}=[fill=green,circle,inner sep=1pt]
 
-\begin{frame}{Algorithm}	
-\begin{columns}
-\column{0.45\textwidth}
-	\begin{itemize}
-			\setlength{\itemsep}{\loose}
-			\item<alert@2-3> Sample \textcolor{black}{($\boldsymbol{n^{\frac{2}{3}}}$ Points from $P$)}
-%				\hspace{1em}$\color{black}{S = \{s_1,...,s_{\alert{\boldsymbol{n^{\frac{2}{3}}}}}\} \subset P}$ \\
-%				\hspace{1em}$\color{black}{\delta = min(dist(s_i, s_j))}$
-			\item<alert@4> Partition
-			\item<alert@5-> Compute
-	\end{itemize}
-\column{0.55\textwidth}
-
-	\begin{tikzpicture}[remember picture, scale = 5]
-	\draw [<->] (0,1.1) node (yaxis) [above] {$y$} |- (1.1,0) node (xaxis) [right] {$x$};	      
-	\coordinate (c0) at (0,0);  
-    \coordinate (c) at (1,1);
-    
-    \coordinate (la) at (-0.01, 0.148);
-    \coordinate (la0) at (-0.01, 0);
-    \coordinate (lam) at (-0.02, 0.074);
-    
-	\coordinate (cc22) at (0.2986,0.2986);
-	\coordinate (cc23) at (0.2986,0.4479);
-	\coordinate (cc24) at (0.2986,0.5972);
-	\coordinate (cc25) at (0.2986,0.7465);
-	\coordinate (cc32) at (0.4479,0.2986);
-	\coordinate (cc33) at (0.4479,0.4479);
-	\coordinate (cc34) at (0.4479,0.5972);
-	\coordinate (cc35) at (0.4479,0.7465);
-	\coordinate (cc42) at (0.5972,0.2986);
-	\coordinate (cc43) at (0.5972,0.4479);
-	\coordinate (cc44) at (0.5972,0.5972);
-	\coordinate (cc45) at (0.5972,0.7465);
-	\coordinate (cc52) at (0.7465,0.2986);
-	\coordinate (cc53) at (0.7465,0.4479);
-	\coordinate (cc54) at (0.7465,0.5972);
-	\coordinate (cc55) at (0.7465,0.7465);
-    
-    
-	\draw[dashed] (yaxis |- c) node[left] {$1$}
-        -| (xaxis -| c) node[below] {$1$};
-    \draw (0,0) node[left,below] {$0$};
-        
-\node[st1](p1) at (0.10802,0.20208){};
-\node[st1](p2) at (0.517,0.45389){};
-\node[st1](p3) at (0.14316,0.42791){};
-\node[st1](p4) at (0.55937,0.96605){};
-\node[st1](p5) at (0.15796,0.62006){};
-\node[st1](p6) at (0.76668,0.59539){};
-\node[st1](p7) at (0.84871,0.72016){};
-\node[st1](p8) at (0.91682,0.3469){};
-\node[st1](p9) at (0.98697,0.51699){};
-\node[st1](p10) at (0.50513,0.55669){};
-\node[st1](p11) at (0.27142,0.1565){};
-\node[st1](p12) at (0.10075,0.56206){};
-\node[st1](p13) at (0.50785,0.6948){};
-\node[st1](p14) at (0.58561,0.42646){};
-\node[st1](p15) at (0.76289,0.83627){};
-\node[st1](p16) at (0.082963,0.73139){};
-\node[st1](p17) at (0.6616,0.36003){};
-\node[st1](p18) at (0.81698,0.25421){};
-\node[st1](p19) at (0.17105,0.38639){};
-\node[st1](p20) at (0.93856,0.77555){};
-\node[st1](p21) at (0.59048,0.73427){};
-\node[st1](p22) at (0.44063,0.43028){};
-\node[st1](p23) at (0.94192,0.69375){};
-\node[st1](p24) at (0.65591,0.94521){};
-\node[st1](p25) at (0.45195,0.78423){};
-\node[st1](p26) at (0.3397,0.70557){};
-\node[st1](p27) at (0.53262,0.10933){};
-	\end{tikzpicture}	
-	
-	\begin{tikzpicture}[remember picture, overlay]
-	\node<2-3> at (p1) [st2] {};	
-	\node<2-3> at (p2) [st2] {};	
-	\node<2-3> at (p3) [st2] {};	
-	\node<2-3> at (p4) [st2] {};	
-	\node<2-3> at (p5) [st2] {};	
-	\node<2-3> at (p6) [st2] {};	
-	\node<2-3> at (p7) [st2] {};	
-	\node<2-3> at (p8) [st2] {};	
-	\node<2-3> at (p9) [st2] {};	
-
-	\path <3> [draw,thick] (p6) -- node [right]{$\delta$}(p7);
-
-	\draw<4-12>[step= 0.7466, gray, very thin, dashed, xshift =12.5pt, yshift = 6.5pt] (c0) grid (c);	
-	\draw<4> [snake=brace, thick] (la0) -- (la);	
-	\draw<4> (lam) node[left] {$\delta$};
-	
-	\draw<5-12>[thick] (cc33) rectangle (cc44);
-	\node<5-12> at (p2) [st2] {};	
-	\node<5-12> at (p10) [st2] {};		
-	
-	\draw<5>[thick] (cc24) rectangle (cc35);
-	\node<5> at (p26) [st3] {};	
-
-	\draw<6>[thick] (cc34) rectangle (cc45);	
-	\node<6> at (p13) [st3] {};	
-	\node<6> at (p21) [st3] {};		
-	
-	\draw<7>[thick] (cc44) rectangle (cc55);	
-	
-	\draw<8>[thick] (cc43) rectangle (cc54);		
-	
-	\draw<9>[thick] (cc42) rectangle (cc53);
-	\node<9> at (p17) [st3] {};
-	
-	\draw<10>[thick] (cc32) rectangle (cc43);
-	\node<10> at (p14) [st3] {};	
-
-	\draw<11>[thick] (cc22) rectangle (cc33);
-	\node<11> at (p22) [st3] {};
-	
-	\draw<12>[thick] (cc23) rectangle (cc34);
-	
-	\node<13> at (p3) [st2] {};
-	\node<13> at (p19) [st2] {};
-	\end{tikzpicture}
-	
-\end{columns}
-\end{frame}
+%\begin{frame}{Algorithm}	
+%\begin{columns}
+%\column{0.45\textwidth}
+%	\begin{itemize}
+%			\setlength{\itemsep}{\loose}
+%			\item<alert@2-3> Sample \textcolor{black}{($\boldsymbol{n^{\frac{2}{3}}}$ Points from $P$)}
+%%				\hspace{1em}$\color{black}{S = \{s_1,...,s_{\alert{\boldsymbol{n^{\frac{2}{3}}}}}\} \subset P}$ \\
+%%				\hspace{1em}$\color{black}{\delta = min(dist(s_i, s_j))}$
+%			\item<alert@4> Partition
+%			\item<alert@5-> Compute
+%	\end{itemize}
+%\column{0.55\textwidth}
+%
+%	\begin{tikzpicture}[remember picture, scale = 5]
+%	\draw [<->] (0,1.1) node (yaxis) [above] {$y$} |- (1.1,0) node (xaxis) [right] {$x$};	      
+%	\coordinate (c0) at (0,0);  
+%    \coordinate (c) at (1,1);
+%    
+%    \coordinate (la) at (-0.01, 0.148);
+%    \coordinate (la0) at (-0.01, 0);
+%    \coordinate (lam) at (-0.02, 0.074);
+%    
+%	\coordinate (cc22) at (0.2986,0.2986);
+%	\coordinate (cc23) at (0.2986,0.4479);
+%	\coordinate (cc24) at (0.2986,0.5972);
+%	\coordinate (cc25) at (0.2986,0.7465);
+%	\coordinate (cc32) at (0.4479,0.2986);
+%	\coordinate (cc33) at (0.4479,0.4479);
+%	\coordinate (cc34) at (0.4479,0.5972);
+%	\coordinate (cc35) at (0.4479,0.7465);
+%	\coordinate (cc42) at (0.5972,0.2986);
+%	\coordinate (cc43) at (0.5972,0.4479);
+%	\coordinate (cc44) at (0.5972,0.5972);
+%	\coordinate (cc45) at (0.5972,0.7465);
+%	\coordinate (cc52) at (0.7465,0.2986);
+%	\coordinate (cc53) at (0.7465,0.4479);
+%	\coordinate (cc54) at (0.7465,0.5972);
+%	\coordinate (cc55) at (0.7465,0.7465);
+%    
+%    
+%	\draw[dashed] (yaxis |- c) node[left] {$1$}
+%        -| (xaxis -| c) node[below] {$1$};
+%    \draw (0,0) node[left,below] {$0$};
+%        
+%\node[st1](p1) at (0.10802,0.20208){};
+%\node[st1](p2) at (0.517,0.45389){};
+%\node[st1](p3) at (0.14316,0.42791){};
+%\node[st1](p4) at (0.55937,0.96605){};
+%\node[st1](p5) at (0.15796,0.62006){};
+%\node[st1](p6) at (0.76668,0.59539){};
+%\node[st1](p7) at (0.84871,0.72016){};
+%\node[st1](p8) at (0.91682,0.3469){};
+%\node[st1](p9) at (0.98697,0.51699){};
+%\node[st1](p10) at (0.50513,0.55669){};
+%\node[st1](p11) at (0.27142,0.1565){};
+%\node[st1](p12) at (0.10075,0.56206){};
+%\node[st1](p13) at (0.50785,0.6948){};
+%\node[st1](p14) at (0.58561,0.42646){};
+%\node[st1](p15) at (0.76289,0.83627){};
+%\node[st1](p16) at (0.082963,0.73139){};
+%\node[st1](p17) at (0.6616,0.36003){};
+%\node[st1](p18) at (0.81698,0.25421){};
+%\node[st1](p19) at (0.17105,0.38639){};
+%\node[st1](p20) at (0.93856,0.77555){};
+%\node[st1](p21) at (0.59048,0.73427){};
+%\node[st1](p22) at (0.44063,0.43028){};
+%\node[st1](p23) at (0.94192,0.69375){};
+%\node[st1](p24) at (0.65591,0.94521){};
+%\node[st1](p25) at (0.45195,0.78423){};
+%\node[st1](p26) at (0.3397,0.70557){};
+%\node[st1](p27) at (0.53262,0.10933){};
+%	\end{tikzpicture}	
+%	
+%	\begin{tikzpicture}[remember picture, overlay]
+%	\node<2-3> at (p1) [st2] {};	
+%	\node<2-3> at (p2) [st2] {};	
+%	\node<2-3> at (p3) [st2] {};	
+%	\node<2-3> at (p4) [st2] {};	
+%	\node<2-3> at (p5) [st2] {};	
+%	\node<2-3> at (p6) [st2] {};	
+%	\node<2-3> at (p7) [st2] {};	
+%	\node<2-3> at (p8) [st2] {};	
+%	\node<2-3> at (p9) [st2] {};	
+%
+%	\path <3> [draw,thick] (p6) -- node [right]{$\delta$}(p7);
+%
+%	\draw<4-12>[step= 0.7466, gray, very thin, dashed, xshift =12.5pt, yshift = 6.5pt] (c0) grid (c);	
+%	\draw<4> [snake=brace, thick] (la0) -- (la);	
+%	\draw<4> (lam) node[left] {$\delta$};
+%	
+%	\draw<5-12>[thick] (cc33) rectangle (cc44);
+%	\node<5-12> at (p2) [st2] {};	
+%	\node<5-12> at (p10) [st2] {};		
+%	
+%	\draw<5>[thick] (cc24) rectangle (cc35);
+%	\node<5> at (p26) [st3] {};	
+%
+%	\draw<6>[thick] (cc34) rectangle (cc45);	
+%	\node<6> at (p13) [st3] {};	
+%	\node<6> at (p21) [st3] {};		
+%	
+%	\draw<7>[thick] (cc44) rectangle (cc55);	
+%	
+%	\draw<8>[thick] (cc43) rectangle (cc54);		
+%	
+%	\draw<9>[thick] (cc42) rectangle (cc53);
+%	\node<9> at (p17) [st3] {};
+%	
+%	\draw<10>[thick] (cc32) rectangle (cc43);
+%	\node<5-12> at (p2) [st2] {};		
+%	\node<10> at (p14) [st3] {};	
+%
+%	\draw<11>[thick] (cc22) rectangle (cc33);
+%	\node<11> at (p22) [st3] {};
+%	
+%	\draw<12>[thick] (cc23) rectangle (cc34);
+%	
+%	\node<13> at (p3) [st2] {};
+%	\node<13> at (p19) [st2] {};
+%	\end{tikzpicture}
+%	
+%\end{columns}
+%\end{frame}
 
 %\begin{frame}{Running Time}
 %\begin{itemize}
@@ -260,7 +272,7 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 %How to calculate the shortest distance between samples?
 	\begin{itemize}
 	\setlength{\itemsep}{\loose}
-		\item Computer all pair of distances: $O((n^{\frac{2}{3}})^2) = O(n^{\frac{4}{3}})$
+		\item Compute all pair of distances: $O((n^{\frac{2}{3}})^2) = O(n^{\frac{4}{3}})$
 		\item Divide \& Conquer: $O(n^{\frac{2}{3}}\log n^{\frac{2}{3}}) = O(n^{\frac{2}{3}}\log n) \subset O(n)$ \\
 		\hspace{1em} More samples possible: $O(\frac{n}{\log n} \log \frac{n}{\log n}) \subset O(n) $
 		\item Other approach?
@@ -274,8 +286,8 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 		\item Divide the coordinates by cell length and truncate them to integer
 
 %		\item At most $n$ cells contain point
-		\item Partition $\mathbb{D} = \{D_1, D_2, ..., D_k\}$ and $f_i = |D_i|$, subject to:
-			 $$\bigcup_{i=1}^k D_i = P, D_i \cap D_j = \emptyset, k <= n$$
+		\item Partition $\mathbb{G} = \{G_1, G_2, ..., G_k\}$ with:
+			 $$\bigcup_{i=1}^k G_i = P, G_i \cap G_j = \emptyset, k <= n$$
 				\item $O(n)$ with hashing
 	\end{itemize}
 \end{frame}
@@ -284,26 +296,111 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 	\begin{itemize}
 		\setlength{\itemsep}{\loose}
 		\item Compute distances of all pairs
-		\item tre
+		\item Running time: O(n)
 	\end{itemize}
-	\begin{theorem}{test}
-		fsa
+	\begin{theorem}
+		Let $\boldsymbol{f_i} = |G_i|$ with $1\leq i \leq k$ be the number of points in $i$-th non-empty cell and $c, d$ some positive constants, then: 
+	$$\sum_{i=1}^k f_i <= c \cdot n \text{ with probability } 1 - \frac{1}{2^{n^d}}$$
 	\end{theorem}
 \end{frame}
 
-\begin{frame}{Alternative Approach for Sampling}
+\begin{frame}{Alternative for Sampling}
 
 \end{frame}
 
+\begin{frame}{Pseudocode}
+\begin{columns}
+	\column{0.75\textwidth}
+\begin{itemize}\itemsep0pt
+\item[\footnotesize 0] Cell list $C = \emptyset$, Hash table $H = \emptyset$, Result $rst = \infty$\\
+						Number of non-empty cells $k = 0$ \\
+						
+\vspace{5pt}
+\item[\footnotesize 1] Choose set $S$ of $n^{\frac{2}{3}}$ samples
+						$\delta = min_{x,y \in S, x \neq y}(dist(x, y))$
+\item[\footnotesize 2] \textbf{for} $i = 1$ \textbf{to} $n$ \textbf{do} \\
+						\hspace{2em}$c = cell(p_i)$ \\
+						\hspace{2em}\textbf{if} \textit{not} $H.find(c)$ \textbf{then} \\
+						\hspace{4em}$H.add(\{c, idx = $\texttt{ ++}$k\})$ \\
+						\hspace{2em}$L[H.find(c).idx].add(p_i)$ \\
+\item[\footnotesize 3] %$result = arg$ $min (dist(x,y))$							
+						\textbf{for} $i = 1$ \textbf{to} $k$ \textbf{do} \\
+						\hspace{2em} \textbf{foreach} $j$ \textbf{in} $\{i\} \cup neighbor\rule{1ex}{0.4pt}idx(cell_i)$ \textbf{do} \\
+						\hspace{4em} \textbf{foreach} $\{p_i,p_j\}$ \textbf{in} $L_i \times L_j$ \\
+						\hspace{6em} $rst = min(rst, dist(p_i, p_j)$
+\end{itemize}
 
+	\column{0.25\textwidth}
+		\begin{itemize}\itemsep0pt
+			\item[] \textcolor{white}{$|$}\\ \textcolor{white}{$|$}\\
+			\vspace{5pt}
+			\item[]$O(n^{\frac{8}{9}})$\\\textcolor{white}{$|$} \\ 					
+			\item[]$O(n)$\\\textcolor{white}{$|$} \\\textcolor{white}{$|$} \\ \textcolor{white}{$|$}\\ \textcolor{white}{$|$}\\
+			\item[]$O(n)$\\\textcolor{white}{$|$} \\\textcolor{white}{$|$} \\ \textcolor{white}{$|$}\\
+		\end{itemize}
+\end{columns}
+\end{frame}
 
 \begin{frame}{Parallelization}
+\begin{columns}
+	\column{0.75\textwidth}
+\begin{itemize}\itemsep0pt
+\item[\footnotesize 1] Choose set $S$ of $n^{\frac{2}{3}}$ samples
+						$\delta = min_{x,y \in S, x \neq y}(dist(x, y))$
+\item[\footnotesize 2] \textbf{for} $i = 1$ \textbf{to} $n$ \textbf{do} \\
+						\hspace{2em}$c = cell(p_i)$ \\
+						\hspace{2em}\textbf{if} \textit{not} $H.find(c)$ \textbf{then} \\
+						\hspace{4em}$H.add(\{c, idx = $\texttt{ ++}$k\})$ \\
+						\hspace{2em}$L[H.find(c).idx].add(p_i)$ \\
+\item[\footnotesize 3] %$result = arg$ $min (dist(x,y))$							
+						\textbf{for} $i = 1$ \textbf{to} $k$ \textbf{do} \\
+						\hspace{2em} \textbf{foreach} $j$ \textbf{in} $neighbor\rule{1ex}{0.4pt}idx(cell_i)$ \textbf{do} \\
+						\hspace{4em} \textbf{foreach} $\{p_i,p_j\}$ \textbf{in} $L_i \times L_j$ \\
+						\hspace{6em} $rst = min(rst, dist(p_i, p_j)$
+\end{itemize}
+
+	\column{0.25\textwidth}
+		\begin{itemize}\itemsep0pt
+			\item[] \textcolor{white}{$|$}\\ \textcolor{white}{$|$}\\
+			\vspace{5pt}
+			\item[]$O(n^{\frac{8}{9}})$\\\textcolor{white}{$|$} \\ 					
+			\item[]$O(n)$\\\textcolor{white}{$|$} \\\textcolor{white}{$|$} \\ \textcolor{white}{$|$}\\ \textcolor{white}{$|$}\\
+			\item[]$O(n)$\\\textcolor{white}{$|$} \\\textcolor{white}{$|$} \\ \textcolor{white}{$|$}\\
+		\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Proof Idea}
+\begin{theorem}
+		Let $\boldsymbol{f_i} = |G_i|$ with $1\leq i \leq k$ be the number of points in $i$-th non-empty cell and $c, d$ some positive constants, then: 
+	$$\sum_{i=1}^k f_i <= c \cdot n \text{ with probability } 1 - \frac{1}{2^{n^d}}$$
+\end{theorem}
+\end{frame}
+
+\begin{frame}{Proof Idea}
+
+\begin{block}{Sampling Lemma}
+fa
+\end{block}
 
 \end{frame}
 
-\begin{frame}{Proof}
+\begin{frame}{Proof Idea}
+
+\begin{block}{Lemma 2}
+fa
+\end{block}
 
 \end{frame}
+
+\begin{frame}{Proof Idea}
+
+\begin{block}{Lemma 3}
+fa
+\end{block}
+
+\end{frame}
+
 %
 %\begin{frame}{Q \& A}
 %\begin{center}
@@ -314,14 +411,15 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 \appendix
 \beginbackup
 
-
 \nocite{major}
 \nocite{dietzfelbinger1997reliable}
 \nocite{fortune1978note}
 \nocite{chap13}
 \nocite{web}
+\nocite{web2}
 \nocite{khuller1995simple}
 \nocite{Bentley:1976:DMS:800113.803652}
+\nocite{chor1989power}
 
 \begin{frame}[allowframebreaks]{Reference}
 \printbibliography
