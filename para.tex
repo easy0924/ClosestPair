@@ -103,7 +103,7 @@
 \begin{frame}{Problem Description}
 \begin{block}{Closest Pair Problem}
 \begin{itemize}
-\item Given $n$ \textbf{different} unordered points $P = \{p_1,p_2, ... ,p_n\}$ in \textbf{unit square}: \\
+\item Given $n$ \textbf{different} unordered points $P = \{p_1,p_2, ... ,p_n\}$ in \textbf{unit square} \\
 $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 \item Find a pair of points with closest euclidean distance between them
 \item Find any pair if there's a tie.
@@ -114,10 +114,12 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 \begin{frame}{Background}
 \begin{itemize}
 	\setlength{\itemsep}{\loose}
-	\item O(n log n) lower bound in comparison tree model
-	\item 1976  Rabin proves that + floor function + randomness = > O(n) expected time
- 	\item 1979  Steven Fortune and John E. Hopcroft + floor function but no randomness => O(n loglog n)
- 	\item 1995  Samir Khuller and Yossi Matias Another O(n) algorithm that uses the floor function and randomization
+	\item $O(n \log n)$ lower bound in comparison tree model
+	\item \textbf{\cite{Bentley:1976:DMS:800113.803652}} \\
+		$O(n\log n)$ algorithm using divide and conquer
+	\item \textbf{\cite{major}}\\ \alert{$O(n)$ randomized algorithm with $O(1)$ floor function}
+ 	\item \textbf{\cite{fortune1978note}} \\ Deterministic $O(n \log \log n)$ algorithm with $O(1)$ floor function
+ 	\item \textbf{\cite{khuller1995simple}} \\ Another O(n) randomized algorithm
 \end{itemize}
 \end{frame}
 
@@ -286,110 +288,268 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 		\item Divide the coordinates by cell length and truncate them to integer
 
 %		\item At most $n$ cells contain point
-		\item Partition $\mathbb{G} = \{G_1, G_2, ..., G_k\}$ with:
-			 $$\bigcup_{i=1}^k G_i = P, G_i \cap G_j = \emptyset, k <= n$$
+		\item Partition $\mathbb{D} = \{D_1, D_2, ..., D_k\}$ with:
+			 $$\bigcup_{i=1}^k D_i = P, D_i \cap D_j = \emptyset, k <= n$$
 				\item $O(n)$ with hashing
 	\end{itemize}
 \end{frame}
 
+\begin{frame}{Partition}
+\begin{tikzpicture}[scale = 0.8]
+\tikzstyle{every node}=[font=\small]
+\node (rect) at (0,0) [draw,minimum width=1cm,minimum height=0.5cm](h0) {$0$};
+\node (rect) at (1.25,0) [draw,minimum width=1cm,minimum height=0.5cm](h1) {$1$};
+\node (rect) at (2.5,0) [draw,minimum width=1cm,minimum height=0.5cm] {$2$};
+\node (rect) at (3.75,0) [draw,minimum width=1cm,minimum height=0.5cm](h3) {$3$};
+\node (rect) at (5,0) [draw,minimum width=1cm,minimum height=0.5cm] {$4$};
+\node (rect) at (6.25,0) [draw,minimum width=1cm,minimum height=0.5cm] {$5$};
+\node (rect) at (7.5,0) [draw,minimum width=1cm,minimum height=0.5cm] {$6$};
+
+\node (rect) at (3.75,-1) [draw,minimum width=1cm,minimum height=0.5cm,thick] (b1) {$1,1$};
+\node (rect) at (7.5,-1) [draw,minimum width=1.6cm,minimum height=0.5cm](c1) {$(0.1,0.2)$};
+\node (rect) at (9.5,-1) [draw,minimum width=1.6cm,minimum height=0.5cm] {$(0.2,0.1)$};
+
+\node (rect) at (1.25, -2) [draw,minimum width=1cm,minimum height=0.5cm,red,thick] (b2) {$2,3$};
+\node (rect) at (7.5,-2) [draw,minimum width=1.6cm,minimum height=0.5cm](c2) {$(0.5,0.7)$};
+\node (rect) at (9.5,-2) [draw,minimum width=1.6cm,minimum height=0.5cm,red] {$(0.4,0.6)$};
+\node (rect) at (11.5,-2) [draw,minimum width=1.6cm,minimum height=0.5cm] {$(0.4,0.8)$};
+
+
+\node (rect) at (3.75,-3) [draw,minimum width=1cm,minimum height=0.5cm,thick](b3) {4,3};
+\node (rect) at (7.5,-3) [draw,minimum width=1.6cm,minimum height=0.5cm](c3) {$(0.9,0.8)$};
+\node (rect) at (9.5,-3) [draw,minimum width=1.6cm,minimum height=0.5cm] {$(0.9,0.6)$};
+
+\node (rect) at (0,-4) [draw,minimum width=1cm,minimum height=0.5cm,thick](b4) {3,2};
+\node (rect) at (7.5,-4) [draw,minimum width=1.6cm,minimum height=0.5cm] (c4) {$(0.7,0.4)$};
+
+%\draw[->] (b2) edge (b1);
+\path [draw,-latex'] (h3) -- (b1);
+\path [draw,-latex'] (h1) -- (b2);
+\path [draw,-latex'] (b1) -- (b3);
+\path [draw,-latex'] (h0) -- (b4);
+
+\path [draw,-latex'] (b1) -- (c1);
+\path [draw,-latex'] (b2) -- (c2);
+\path [draw,-latex'] (b3) -- (c3);
+\path [draw,-latex'] (b4) -- (c4);
+
+\end{tikzpicture}
+
+\begin{tikzpicture}[scale  = 2.5]
+\tikzstyle{every node}=[font=\small]
+
+\draw[step= 0.29, gray, very thin, dashed] (0,0) grid (1,1);	
+\draw[thick] (0.29,0.29) -- (0.29,0) -- (0,0) -- (0,0.29) -- (0.29,0.29);
+\draw[thick] (0.29,0.58) -- (0.29,0.87) -- (0.58,0.87) -- (0.58,0.58) -- (0.29,0.58);
+\draw[thick] (0.58,0.58) -- (0.87,0.58) -- (0.87,0.29) -- (0.58,0.29) -- (0.58,0.58);
+\draw[thick] (0.87,0.58) -- (1,0.58) -- (1,0.87) -- (0.87,0.87) -- (0.87,0.58);
+	
+	
+	\draw [<->] (0,1.1) node (yaxis) [above] {} |- (1.1,0) node (xaxis) [right] {};	      
+%	\coordinate (c0) at (0,0);  
+    \coordinate (c) at (1,1);
+    
+	\draw[dashed] (yaxis |- c) node[left] {} -| (xaxis -| c) node[below] {};
+        
+%    \draw (0,0) node[left,below] {$0$};
+    \draw (0.14,0) node[below] {$1$};
+    \draw (0.42,0) node[below] {$2$};
+    \draw (0.70,0) node[below] {$3$};
+    \draw (0.93,0) node[below] {$4$};
+
+    \draw (0,0.14) node[left] {$1$};
+    \draw (0,0.42) node[left] {$2$};
+    \draw (0,0.70) node[left] {$3$};
+    \draw (0,0.93) node[left] {$4$};
+        
+\node[st1](p1) at (0.1,0.2){};
+\node[st2](p2) at (0.4,0.6){};
+\node[st1](p3) at (0.2,0.1){};
+\node[st1](p4) at (0.9,0.8){};
+\node[st1](p5) at (0.9,0.6){};
+\node[st1](p6) at (0.7,0.4){};
+\node[st1](p7) at (0.5,0.7){};
+\node[st1](p8) at (0.4,0.8){};
+
+\node at (1.3,0.5) [right] {$\boldsymbol{H}(cell_{x\_idx}, cell_{y\_idx}) = (cell_{x\_idx} + 2\cdot cell_{y\_idx}) \mod 13$};
+
+\end{tikzpicture}	
+\end{frame}
+
 \begin{frame}{Compute}
-	\begin{itemize}
-		\setlength{\itemsep}{\loose}
-		\item Compute distances of all pairs
-		\item Running time: O(n)
-	\end{itemize}
+
+	Compute all pairs distances
+$$O(\sum_{i=1}^k f_i \cdot (f_i + |neighbor(G_i)|) ) = O(\sum_{i=1}^k f_i^2) = O(n)$$
 	\begin{theorem}
-		Let $\boldsymbol{f_i} = |G_i|$ with $1\leq i \leq k$ be the number of points in $i$-th non-empty cell and $c, d$ some positive constants, then: 
-	$$\sum_{i=1}^k f_i <= c \cdot n \text{ with probability } 1 - \frac{1}{2^{n^d}}$$
+		Let $\boldsymbol{f_i} = |G_i|$ with $1\leq i \leq k$ be the number of points in $i$-th non-empty cell and $c, d$ some positive constants, then 
+	$$Prob\left(\sum_{i=1}^k f_i^2 <= c \cdot n \right) \geq  1 - \frac{1}{2^{n^d}}$$
 	\end{theorem}
 \end{frame}
 
 \begin{frame}{Alternative for Sampling}
-
+Recursively calculate the closest distance on samples $S = \{s_1,...,s_{n^{\frac{2}{3}}}\}$
+\begin{itemize}
+\setlength{\itemsep}{\loose}
+\item Sample another $n^{\frac{4}{9}}$ points $S'$ from $S$
+\item Get closest distance on $S'$ by calculating all pair distances: $O(n^{\frac{8}{9}})$
+\item Partition and compute the closest distance on $S$
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Pseudocode}
 \begin{columns}
-	\column{0.75\textwidth}
+	\column{0.7\textwidth}
 \begin{itemize}\itemsep0pt
-\item[\footnotesize 0] Cell list $C = \emptyset$, Hash table $H = \emptyset$, Result $rst = \infty$\\
-						Number of non-empty cells $k = 0$ \\
+\item[\footnotesize 0] Cell set $H = \emptyset$, Result $rst = \infty$\\
 						
-\vspace{5pt}
+\vspace{8pt}
 \item[\footnotesize 1] Choose set $S$ of $n^{\frac{2}{3}}$ samples
 						$\delta = min_{x,y \in S, x \neq y}(dist(x, y))$
 \item[\footnotesize 2] \textbf{for} $i = 1$ \textbf{to} $n$ \textbf{do} \\
 						\hspace{2em}$c = cell(p_i)$ \\
-						\hspace{2em}\textbf{if} \textit{not} $H.find(c)$ \textbf{then} \\
-						\hspace{4em}$H.add(\{c, idx = $\texttt{ ++}$k\})$ \\
-						\hspace{2em}$L[H.find(c).idx].add(p_i)$ \\
+						\hspace{2em}\textbf{if} \textit{not} $H.findCell(c)$ \textbf{then} \\
+						\hspace{4em}$H.addCell(\{c, idx = \{c.x, c.y\}\}$ \\
+						\hspace{2em}$H.findCell(c).addPoint(p_i)$ \\
 \item[\footnotesize 3] %$result = arg$ $min (dist(x,y))$							
-						\textbf{for} $i = 1$ \textbf{to} $k$ \textbf{do} \\
-						\hspace{2em} \textbf{foreach} $j$ \textbf{in} $\{i\} \cup neighbor\rule{1ex}{0.4pt}idx(cell_i)$ \textbf{do} \\
-						\hspace{4em} \textbf{foreach} $\{p_i,p_j\}$ \textbf{in} $L_i \times L_j$ \\
-						\hspace{6em} $rst = min(rst, dist(p_i, p_j)$
+						\textbf{foreach} $c_1$ \textbf{in} $H$ \textbf{do} \\
+						\hspace{2em} \textbf{foreach} $c_2$ \textbf{in} $\{c_1\} \cup neighbor(c_1)$ \textbf{do} \\
+						\hspace{4em} \textbf{foreach} $(p_i,p_j)$ \textbf{in} $c_1 \times c_2$ \\
+						\hspace{6em} $rst = min(rst, dist(p_i, p_j))$
 \end{itemize}
 
-	\column{0.25\textwidth}
+	\column{0.3\textwidth}
 		\begin{itemize}\itemsep0pt
-			\item[] \textcolor{white}{$|$}\\ \textcolor{white}{$|$}\\
-			\vspace{5pt}
-			\item[]$O(n^{\frac{8}{9}})$\\\textcolor{white}{$|$} \\ 					
-			\item[]$O(n)$\\\textcolor{white}{$|$} \\\textcolor{white}{$|$} \\ \textcolor{white}{$|$}\\ \textcolor{white}{$|$}\\
-			\item[]$O(n)$\\\textcolor{white}{$|$} \\\textcolor{white}{$|$} \\ \textcolor{white}{$|$}\\
+			\item[] \textcolor{white}{$|$}\\
+			\vspace{8pt}
+			\item[]$O(n^{\frac{2}{3}})$\\ $O(n^{\frac{8}{9}})$ \\ 					
+			\item[]$O(n)$\\\textcolor{white}{$|$} \\\textcolor{white}{$|$} \\ \textcolor{white}{$|$}\\  \textcolor{white}{$|$}\\
+			\item[]$O(n)$\\\textcolor{white}{$|$} \\ \textcolor{white}{$|$} \\\textcolor{white}{$|$}\\
 		\end{itemize}
 \end{columns}
+\vspace{2ex}
+Runtime: \alert{$O(n)$} with high probability\\
+Worst case: $O(n^2)$
 \end{frame}
 
+
+
+
+\setlength{\columnsep}{-10cm}
 \begin{frame}{Parallelization}
 \begin{columns}
-	\column{0.75\textwidth}
+%\setlength{\columnseprule}{think}
+
+\small
+	\column{0.84\textwidth}
 \begin{itemize}\itemsep0pt
-\item[\footnotesize 1] Choose set $S$ of $n^{\frac{2}{3}}$ samples
-						$\delta = min_{x,y \in S, x \neq y}(dist(x, y))$
-\item[\footnotesize 2] \textbf{for} $i = 1$ \textbf{to} $n$ \textbf{do} \\
+\item[\footnotesize 0] Cell set $H = \emptyset$, Result $rst = \infty$ \alert{\#\# $H$ synchronized Hashmap} \\
+						
+\vspace{8pt}
+\item[\footnotesize 1] 
+Choose set $S$ of $n^{\frac{2}{3}}$ samples \alert{\#\# allocate $p$ PEs}\\
+						$\delta = min_{x,y \in S, x \neq y}(dist(x, y))$ \alert{\#\# recurse once}\\
+\item[\footnotesize 2] \textbf{for} $i = 1$ \textbf{to} $n$ \textbf{do} \alert{\#\# allocate $p$ PEs} \\
 						\hspace{2em}$c = cell(p_i)$ \\
-						\hspace{2em}\textbf{if} \textit{not} $H.find(c)$ \textbf{then} \\
-						\hspace{4em}$H.add(\{c, idx = $\texttt{ ++}$k\})$ \\
-						\hspace{2em}$L[H.find(c).idx].add(p_i)$ \\
-\item[\footnotesize 3] %$result = arg$ $min (dist(x,y))$							
-						\textbf{for} $i = 1$ \textbf{to} $k$ \textbf{do} \\
-						\hspace{2em} \textbf{foreach} $j$ \textbf{in} $neighbor\rule{1ex}{0.4pt}idx(cell_i)$ \textbf{do} \\
-						\hspace{4em} \textbf{foreach} $\{p_i,p_j\}$ \textbf{in} $L_i \times L_j$ \\
-						\hspace{6em} $rst = min(rst, dist(p_i, p_j)$
+						\hspace{2em}\textbf{if} \textit{not} $H.findCell(c)$ \textbf{then} \\
+						\hspace{4em}$H.addCell(\{c, idx = \{c.x, c.y\}\}$ \alert{\#\# maximal $n$ times}\\								\hspace{2em}$H.findCell(c).addPoint(p_i)$ \\
+\item[\footnotesize 3] %$result = arg$ $min (dist(x,y))$		
+						\textbf{foreach} $c_1$ \textbf{in} $H$ \textbf{do} \\
+						\hspace{2em} \textbf{foreach} $c_2$ \textbf{in} $\{c_1\} \cup neighbor(c_1)$ \textbf{do} \\
+						\hspace{4em} \textbf{foreach} $(p_i,p_j)$ \textbf{in} $c_1 \times c_2$ \alert{\#\# allocate $\lfloor p \cdot \frac{\#Pairs}{|c_1||c_2|}\rfloor$ PEs}\\
+						\hspace{6em} $rst = min(rst, dist(p_i, p_j))$
 \end{itemize}
 
-	\column{0.25\textwidth}
+	\column{0.4\textwidth}
 		\begin{itemize}\itemsep0pt
-			\item[] \textcolor{white}{$|$}\\ \textcolor{white}{$|$}\\
-			\vspace{5pt}
-			\item[]$O(n^{\frac{8}{9}})$\\\textcolor{white}{$|$} \\ 					
-			\item[]$O(n)$\\\textcolor{white}{$|$} \\\textcolor{white}{$|$} \\ \textcolor{white}{$|$}\\ \textcolor{white}{$|$}\\
-			\item[]$O(n)$\\\textcolor{white}{$|$} \\\textcolor{white}{$|$} \\ \textcolor{white}{$|$}\\
+			\item[]  
+			\vspace{8pt}
+			\item[]$O(n^{\frac{2}{3}}/p)$\\ $O(n^{\frac{8}{9}} + \log p)$ \\ 					
+			\item[]$O(n/p)$\\\textcolor{white}{$|$} \\\textcolor{white}{$|$} \\ \textcolor{white}{$|$}\\  \textcolor{white}{$|$}\\
+			\item[]$O(n/p + \log p)$\\\textcolor{white}{$|$} \\ \textcolor{white}{$|$} \\\textcolor{white}{$|$}\\
 		\end{itemize}
 \end{columns}
+\vspace{2ex}
+Total runtime: $O(\frac{n}{p} + \alert{\log p})$  \\
+\hspace*{2em}$\log p$ for collecting minimal distance from all processors
 \end{frame}
 
 \begin{frame}{Proof Idea}
-\begin{theorem}
-		Let $\boldsymbol{f_i} = |G_i|$ with $1\leq i \leq k$ be the number of points in $i$-th non-empty cell and $c, d$ some positive constants, then: 
-	$$\sum_{i=1}^k f_i <= c \cdot n \text{ with probability } 1 - \frac{1}{2^{n^d}}$$
-\end{theorem}
+	\begin{theorem}
+		Let $\boldsymbol{f_i} = |G_i|$ with $1\leq i \leq k$ be the number of points in $i$-th non-empty cell and $c, d$ some positive constants, then 
+	$$Prob\left(\sum_{i=1}^k f_i^2 <= c \cdot n \right) \geq  1 - \frac{1}{2^{n^d}}$$
+	\end{theorem}
 \end{frame}
 
 \begin{frame}{Proof Idea}
-
 \begin{block}{Sampling Lemma}
-fa
+Let $D = \{D_1, D_2,...,D_k\}$ be a partition of set $P$, $|P| = n$, for which $Pair(D) \geq n$, where
+$$Pair(D) = \sum_{i=1}^k \frac{|D_i|\cdot (|D_i| - 1)}{2}$$ 
+If $n^{\frac{2}{3}}$ pairwise different elements are drawn at random from P then the probability, that two elements will be chosen from the same $D_i$, is at least $1 - 2^{-n^c}$ for some positive constant $c$
 \end{block}
+Proof see
+\begin{itemize}
+
+\item \textbf{\cite{major}}
+\item \textbf{\cite{dietzfelbinger1997reliable}} \\Estimate the probability using Chebyshev’s inequality
+\end{itemize}
 
 \end{frame}
 
 \begin{frame}{Proof Idea}
 
 \begin{block}{Lemma 2}
-fa
+Let $G_\delta$ be a grid with gap $\delta$ and $G_{2\delta}$ another grid with gap $2\delta$, which is obtained by ignoring every second line of $G_\delta$, then
+$$N(G_{2\delta}) \leq 4N(G_\delta) + \frac{3}{2}n$$
 \end{block}
+
+\begin{columns}
+
+	\column{0.6\textwidth}
+	\begin{itemize}
+		\item $f(x) = x(x-1)$ convex $->$	
+	
+	\end{itemize}
+
+	\column{0.4\textwidth}
+\begin{tikzpicture}[scale  = 2.5]
+\tikzstyle{every node}=[font=\small]
+\draw[step= 0.18, gray, very thin, dashed] (0,0) grid (1,1);	
+\draw[step= 0.36, gray, very thin] (0,0) grid (1,1);	
+	
+	
+	\draw [<->] (0,1.1) node (yaxis) [above] {} |- (1.1,0) node (xaxis) [right] {};	      
+	\draw [snake=brace] (-0.01,0) -- (-0.01,0.18);	
+%	\coordinate (c0) at (0,0);  
+    \coordinate (c) at (1,1);
+    
+%	\draw[dashed] (yaxis |- c) node[left] {} -| (xaxis -| c) node[below] {};
+        
+%    \draw (0,0) node[left,below] {$0$};
+    \draw (-0.02,0.07) node[left] {$\delta$};
+        
+\node[st1](p1) at (0.1,0.2){};
+\node[st1](p2) at (0.4,0.6){};
+\node[st1](p3) at (0.2,0.1){};
+\node[st1](p4) at (0.85,0.8){};
+\node[st1](p5) at (0.95,0.6){};
+\node[st1](p6) at (0.7,0.4){};
+\node[st1](p7) at (0.5,0.63){};
+\node[st1](p8) at (0.6,0.63){};
+\node[st1] at (0.4,0.5){};
+\node[st1] at (0.5,0.4){};
+\node[st1] at (0.67,0.6){};
+\node[st1] at (0.6,0.5){};
+\node[st1] at (0.1,0.8){};
+
+\node at (0.09,0.63) {$k_1$};
+\node at (0.27,0.63) {$k_2$};
+\node at (0.09,0.45) {$k_3$};
+\node at (0.27,0.45) {$k_4$};
+
+
+\end{tikzpicture}	
+
+\end{columns}
 
 \end{frame}
 
@@ -417,6 +577,7 @@ fa
 \nocite{chap13}
 \nocite{web}
 \nocite{web2}
+\nocite{web3}
 \nocite{khuller1995simple}
 \nocite{Bentley:1976:DMS:800113.803652}
 \nocite{chor1989power}
@@ -426,13 +587,13 @@ fa
 \end{frame}
 
 
-\begin{frame}{Load Balancing in Step 3}
-testc
-\end{frame}
-
-\begin{frame}{Implementation of Hashing}
-
-\end{frame}
+%\begin{frame}{Load Balancing in Step 3}
+%testc
+%\end{frame}
+%
+%\begin{frame}{Implementation of Hashing}
+%
+%\end{frame}
 
 
 \backupend

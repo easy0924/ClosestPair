@@ -47,6 +47,11 @@
   urldata = {2013-07-15}
 }
 
+@online{web3,
+  url={http://en.wikipedia.org/wiki/Closest_pair_of_points_problem/},
+  urldata = {2013-07-15}
+}
+
 @inproceedings{Bentley:1976:DMS:800113.803652,
  author = {Bentley, Jon Louis and Shamos, Michael Ian},
  title = {Divide-and-conquer in multidimensional space},
@@ -71,5 +76,16 @@
   number={1},
   pages={34--37},
   year={1995},
+  publisher={Elsevier}
+}
+
+@article{chor1989power,
+  title={On the power of two-point based sampling},
+  author={Chor, Benny and Goldreich, Oded},
+  journal={Journal of Complexity},
+  volume={5},
+  number={1},
+  pages={96--106},
+  year={1989},
   publisher={Elsevier}
 }
