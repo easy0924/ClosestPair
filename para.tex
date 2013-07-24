@@ -288,7 +288,7 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 		\item Divide the coordinates by cell length and truncate them to integer
 
 %		\item At most $n$ cells contain point
-		\item Partition $\mathbb{D} = \{D_1, D_2, ..., D_k\}$ with:
+		\item Partition $D = \{D_1, D_2, ..., D_k\}$ with:
 			 $$\bigcup_{i=1}^k D_i = P, D_i \cap D_j = \emptyset, k <= n$$
 				\item $O(n)$ with hashing
 	\end{itemize}
@@ -311,9 +311,8 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 
 \node (rect) at (1.25, -2) [draw,minimum width=1cm,minimum height=0.5cm,red,thick] (b2) {$2,3$};
 \node (rect) at (7.5,-2) [draw,minimum width=1.6cm,minimum height=0.5cm](c2) {$(0.5,0.7)$};
-\node (rect) at (9.5,-2) [draw,minimum width=1.6cm,minimum height=0.5cm,red] {$(0.4,0.6)$};
 \node (rect) at (11.5,-2) [draw,minimum width=1.6cm,minimum height=0.5cm] {$(0.4,0.8)$};
-
+\node (rect) at (9.5,-2) [draw,minimum width=1.6cm,minimum height=0.5cm,red] {$(0.4,0.6)$};
 
 \node (rect) at (3.75,-3) [draw,minimum width=1cm,minimum height=0.5cm,thick](b3) {4,3};
 \node (rect) at (7.5,-3) [draw,minimum width=1.6cm,minimum height=0.5cm](c3) {$(0.9,0.8)$};
@@ -381,7 +380,7 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 	Compute all pairs distances
 $$O(\sum_{i=1}^k f_i \cdot (f_i + |neighbor(G_i)|) ) = O(\sum_{i=1}^k f_i^2) = O(n)$$
 	\begin{theorem}
-		Let $\boldsymbol{f_i} = |G_i|$ with $1\leq i \leq k$ be the number of points in $i$-th non-empty cell and $c, d$ some positive constants, then 
+		Let $f_i = |G_i|$ with $1\leq i \leq k$ be the number of points in $i$-th non-empty cell and $c, d$ some positive constants, then 
 	$$Prob\left(\sum_{i=1}^k f_i^2 <= c \cdot n \right) \geq  1 - \frac{1}{2^{n^d}}$$
 	\end{theorem}
 \end{frame}
@@ -473,17 +472,17 @@ Total runtime: $O(\frac{n}{p} + \alert{\log p})$  \\
 \hspace*{2em}$\log p$ for collecting minimal distance from all processors
 \end{frame}
 
-\begin{frame}{Proof Idea}
+\begin{frame}{Proof Sketch}
 	\begin{theorem}
 		Let $\boldsymbol{f_i} = |G_i|$ with $1\leq i \leq k$ be the number of points in $i$-th non-empty cell and $c, d$ some positive constants, then 
 	$$Prob\left(\sum_{i=1}^k f_i^2 <= c \cdot n \right) \geq  1 - \frac{1}{2^{n^d}}$$
 	\end{theorem}
 \end{frame}
 
-\begin{frame}{Proof Idea}
+\begin{frame}{Proof Sketch}
 \begin{block}{Sampling Lemma}
-Let $D = \{D_1, D_2,...,D_k\}$ be a partition of set $P$, $|P| = n$, for which $Pair(D) \geq n$, where
-$$Pair(D) = \sum_{i=1}^k \frac{|D_i|\cdot (|D_i| - 1)}{2}$$ 
+Let $D = \{D_1, D_2,...,D_k\}$ be a partition of set $P$, $|P| = n$, for which $N(D) \geq n$, where
+$$N(D) = \sum_{i=1}^k \frac{|D_i|\cdot (|D_i| - 1)}{2}$$ 
 If $n^{\frac{2}{3}}$ pairwise different elements are drawn at random from P then the probability, that two elements will be chosen from the same $D_i$, is at least $1 - 2^{-n^c}$ for some positive constant $c$
 \end{block}
 Proof see
@@ -495,7 +494,7 @@ Proof see
 
 \end{frame}
 
-\begin{frame}{Proof Idea}
+\begin{frame}{Proof Sketch}
 
 \begin{block}{Lemma 2}
 Let $G_\delta$ be a grid with gap $\delta$ and $G_{2\delta}$ another grid with gap $2\delta$, which is obtained by ignoring every second line of $G_\delta$, then
@@ -505,12 +504,16 @@ $$N(G_{2\delta}) \leq 4N(G_\delta) + \frac{3}{2}n$$
 \begin{columns}
 
 	\column{0.6\textwidth}
-	\begin{itemize}
-		\item $f(x) = x(x-1)$ convex $->$	
 	
-	\end{itemize}
+	\small
+	%	$f(x) = x(x-1)$ convex $\Rightarrow f(\frac{1}{4}\sum_{i=1}^4 k_i) \leq \frac{1}{4}\sum_{i=1}^4 f(k_i)$ 	\\
+	Let $k = \sum_{i=1}^4 k_i$ \\ \vspace{2ex}
+	$f(x) = x(x-1)$ convex $\Rightarrow f(\frac{1}{4}k) \leq \frac{1}{4}\sum_{i=1}^4 f(k_i)$ 	\\ \vspace{2ex}
+	$\frac{1}{2}k(k-1) = 8 \cdot {\color{blue}{\frac{1}{4}k(\frac{1}{4}k - 1)}} + \frac{3}{2}k $\\$\hspace{45pt}\leq 8 \cdot {\color{blue}{\frac{1}{4}\sum_{i=1}^4 k_i*(k_i-1)}} + \frac{3}{2}k $ \\ \vspace{2ex}
+$\Rightarrow N(G_{2\delta}) \leq 4N(G_\delta) + \frac{3}{2}n$
+	
 
-	\column{0.4\textwidth}
+	\column{0.3\textwidth}
 \begin{tikzpicture}[scale  = 2.5]
 \tikzstyle{every node}=[font=\small]
 \draw[step= 0.18, gray, very thin, dashed] (0,0) grid (1,1);	
@@ -553,11 +556,82 @@ $$N(G_{2\delta}) \leq 4N(G_\delta) + \frac{3}{2}n$$
 
 \end{frame}
 
-\begin{frame}{Proof Idea}
+\begin{frame}{Proof Sketch}
 
 \begin{block}{Lemma 3}
-fa
+For any grid $G_\delta$, $G_{\delta'}$ with $\delta' \leq \delta$ the following applies
+$$N(G_{\delta'}) \leq 16N(G_\delta) + 6n$$
+
 \end{block}
+
+\begin{columns}
+\column{0.45\textwidth}
+	$N(G_{\delta'}) \leq \sum_{i=1}^4 N(G_{2\delta}^i)$\\ \vspace{1ex}
+	$\hspace{35pt} \leq \sum_{i=1}^4 (4N(G_\delta) + \frac{3}{2}n)$\\ \vspace{1ex}
+	$\hspace{35pt}=16N(G_\delta) + 6n$
+	\column{0.5\textwidth}
+\begin{tikzpicture}[scale  = 2.5]
+\tikzstyle{every node}=[font=\small]
+\draw[step= 0.16, gray, very thin, dashed] (0,0) grid (1.55,1.55);	
+\draw[step= 0.3, black, very thin] (0,0) grid (1.55,1.55);	
+	
+	
+	\draw [<->,thick] (0,1.6) node (yaxis) [above] {} |- (1.6,0) node (xaxis) [right] {};	      
+	
+	\draw [black,snake=brace] (-0.01,0) -- (-0.01,0.16);	
+	\draw [black,decoration={brace, mirror},decorate] (0,-0.02) -- (0.3,-0.02);	
+    
+    \draw (-0.02,0.07) node[left] {$\delta'$};
+    \draw (0.15,-0.02) node[below] {$\delta$};
+    
+    \draw<1> (0,1.2) node[left] {\textcolor{white}{$G_{2\delta}$}};
+    \draw<2> (0,1.2) node[left] {$G_{2\delta}^1$};
+    \draw<3> (0,1.2) node[left] {$G_{2\delta}^2$};
+    \draw<4> (0,1.2) node[left] {$G_{2\delta}^3$};    
+    \draw<5> (0,1.2) node[left] {$G_{2\delta}^4$};
+
+	\draw[semithick,red] (0.8,0.8) -- (0.8,0.96) -- (0.96,0.96) -- (0.96,0.8) -- (0.8,0.8);
+	
+	\draw[semithick,blue] (0.8,1.12) -- (0.8,1.28) -- (0.96,1.28) -- (0.96,1.12) -- (0.8,1.12);
+	
+	\draw[semithick,green] (1.12,0.48) -- (1.12,0.64) -- (1.28,0.64) -- (1.28,0.48) -- (1.12,0.48);
+	
+	\draw[semithick,brown] (0.48,0.16) -- (0.48,0.32) -- (0.64,0.32) -- (0.64,0.16) -- (0.48,0.16);
+    
+	\draw<2> [step= 0.6, black, thick] (0,0) grid (1.55,1.55);
+	\draw<3> [step= 0.6, black, thick,yshift = 0.3cm] (0,0) grid (1.55,1.25);	
+	\draw<3> [step= 0.6, ystep=2cm, black, thick,xshift = 0.6cm] (0,0) grid (0.95,1.25);	
+	
+	\draw<4> [step= 0.6, ystep=2cm, black, thick,xshift = 0.3cm] (0,0) grid (1.25,1.55);
+	
+	\draw<4> [step= 0.6, xstep=2cm,black, thick,yshift = 0.3cm] (0,0) grid (1.55,1.25);	
+		
+	\draw<5> [step= 0.6, black, thick,xshift = 0.3cm] (0,0) grid (1.25,1.55);		
+	\draw<5> [step= 0.6, xstep=2cm, black, thick,yshift = 0.6cm] (0,0) grid (1.25,0.95);	
+
+\end{tikzpicture}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Proof Sketch}
+\begin{itemize}
+\item Two of $n^{\frac{2}{3}}$ samples will be very likely in the same cell, if $N(G) \geq n$ 
+\item $N(G_{2\delta}) \leq 4N(G_\delta) + \frac{3}{2}n$
+\item $N(G_{\delta'}) \leq 16N(G_\delta) + 6n$ \hspace{2em} if $\delta' \leq \delta$
+\end{itemize}
+
+\begin{proof}
+Let $\delta^*$ be the grid gap, which makes $n \leq N(G_{\delta^*}) < 5.5n$. (It exists!) \\
+If $n^{\frac{2}{3}}$ samples are randomly chosen, two of them will be in one cell with high probability. Let $\delta$ be the distance between them and $\delta < 2\delta^*$, then
+\begin{align*}
+N(G_{\delta})  &\leq 16N(G_{2\delta^*}) + 6n \\
+               &\leq 16N(4N(G_{\delta^*})+\frac{3}{2}n)+6n \\
+               &\in O(n)
+\end{align*}
+ 
+\end{proof}
 
 \end{frame}
 
