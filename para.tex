@@ -317,16 +317,16 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 \node (rect) at (7.5,-1) [draw,minimum width=1.6cm,minimum height=0.5cm](c1) {$(0.1,0.2)$};
 \node (rect) at (9.5,-1) [draw,minimum width=1.6cm,minimum height=0.5cm] {$(0.2,0.1)$};
 
-\node (rect) at (1.25, -2) [draw,minimum width=1cm,minimum height=0.5cm,red,thick] (b2) {$2,3$};
+\node (rect) at (1.25, -2) [draw,minimum width=1cm,minimum height=0.5cm,red,thick] (b2) {$0,1$};
 \node (rect) at (7.5,-2) [draw,minimum width=1.6cm,minimum height=0.5cm](c2) {$(0.5,0.7)$};
 \node (rect) at (11.5,-2) [draw,minimum width=1.6cm,minimum height=0.5cm] {$(0.4,0.8)$};
 \node (rect) at (9.5,-2) [draw,minimum width=1.6cm,minimum height=0.5cm,red] {$(0.4,0.6)$};
 
-\node (rect) at (3.75,-3) [draw,minimum width=1cm,minimum height=0.5cm,thick](b3) {4,3};
+\node (rect) at (3.75,-3) [draw,minimum width=1cm,minimum height=0.5cm,thick](b3) {$3,2$};
 \node (rect) at (7.5,-3) [draw,minimum width=1.6cm,minimum height=0.5cm](c3) {$(0.9,0.8)$};
 \node (rect) at (9.5,-3) [draw,minimum width=1.6cm,minimum height=0.5cm] {$(0.9,0.6)$};
 
-\node (rect) at (0,-4) [draw,minimum width=1cm,minimum height=0.5cm,thick](b4) {3,2};
+\node (rect) at (0,-4) [draw,minimum width=1cm,minimum height=0.5cm,thick](b4) {$2,1$};
 \node (rect) at (7.5,-4) [draw,minimum width=1.6cm,minimum height=0.5cm] (c4) {$(0.7,0.4)$};
 
 %\draw[->] (b2) edge (b1);
@@ -359,15 +359,15 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 	\draw[dashed] (yaxis |- c) node[left] {} -| (xaxis -| c) node[below] {};
         
 %    \draw (0,0) node[left,below] {$0$};
-    \draw (0.14,0) node[below] {$1$};
-    \draw (0.42,0) node[below] {$2$};
-    \draw (0.70,0) node[below] {$3$};
-    \draw (0.93,0) node[below] {$4$};
+    \draw (0.14,0) node[below] {$0$};
+    \draw (0.42,0) node[below] {$1$};
+    \draw (0.70,0) node[below] {$2$};
+    \draw (0.93,0) node[below] {$3$};
 
-    \draw (0,0.14) node[left] {$1$};
-    \draw (0,0.42) node[left] {$2$};
-    \draw (0,0.70) node[left] {$3$};
-    \draw (0,0.93) node[left] {$4$};
+    \draw (0,0.14) node[left] {$0$};
+    \draw (0,0.42) node[left] {$1$};
+    \draw (0,0.70) node[left] {$2$};
+    \draw (0,0.93) node[left] {$3$};
         
 \node[st1](p1) at (0.1,0.2){};
 \node[st2](p2) at (0.4,0.6){};
@@ -477,11 +477,11 @@ Runtime: $O(n)$ with high probability, worst case: $O(n^2)$
 \For{$i \gets \lceil \frac{n}{\sh PE} \rceil\cdot id$ \textbf{to} $min ( \lceil \frac{n}{\sh PE} \rceil \cdot (id + 1) - 1, n-1) $}
 \Comment{$O(\frac{n}{p})$}
 	
-\State $cell \gets (\lfloor \frac{p_i.x}{\delta}\rfloor+1,\lfloor \frac{p_i.y}{\delta}\rfloor+1 )$ 
-\If {$H.\boldsymbol{findCell}(c)$}
-	\State $H.\boldsymbol{addCell}(c)$ \Comment{constant times for each chain}
+\State $cell \gets (\lfloor \frac{p_i.x}{\delta}\rfloor,\lfloor \frac{p_i.y}{\delta}\rfloor )$ 
+\If {$H.\boldsymbol{findCell}(cell)$}
+	\State $H.\boldsymbol{addCell}(cell)$ \Comment{constant times for each chain}
 \EndIf
-\State $H.\boldsymbol{findCell}(c).\boldsymbol{addPoint}(p_i)$
+\State $H.\boldsymbol{findCell}(cell).\boldsymbol{addPoint}(p_i)$
 \EndFor
 \EndProcedure
 \end{algorithmic}
@@ -490,23 +490,23 @@ Runtime: $O(n)$ with high probability, worst case: $O(n^2)$
 
 \begin{frame}{Parallelization}
 \begin{algorithmic}[1]
-\Procedure{Compute}{$\mathbf{in}\:H, k, id,\;\mathbf{out}\:\delta$}
+\Procedure{Compute}{$\mathbf{in}\:H, k, id,\;\mathbf{out}\:result$}
 \State $pairs \gets 0, pcnt \gets 0$
 \For{$i \gets \lceil \frac{k}{\sh PE} \rceil\cdot id$ \textbf{to} $min ( \lceil \frac{k}{\sh PE} \rceil \cdot (id + 1) - 1, k-1)$}
 \Comment{$O(\frac{k}{p})$}
 	\State $pairs \gets pairs + |H[i]| \cdot |\boldsymbol{Neighbor}(H[i])|$
 \EndFor
 \State $total \gets \boldsymbol{ReduceSum}(paris@id)$ \Comment{$O(\log p)$}
-\If {$pairs > 0$}
-	\State $pcnt \gets min (1, \lfloor \frac{pairs}{total} \rfloor) \cdot \sh PE$
-\EndIf
+\State $pcnt \gets pairs > 0 ? 0 : min (1, \lfloor \frac{pairs}{total} \rfloor) \cdot \sh PE$
 \State $pre\_pcnt \at id \gets \boldsymbol{PrefixSum}(pcnt \at id)$\Comment{$O(\log p)$}
 
 \State $id' \gets \boldsymbol{BinarySearch}(id, pre\_pcnt \at [0..\sh PE-1])$ \Comment{$O(\log p)$} 
 
 \State $P \gets$ the $(pre\_pcnt \at id' - id + 1)$-th portion of pairs from $H[\lceil \frac{k}{\sh PE} \rceil\cdot id']$ to $H[min ( \lceil \frac{k}{\sh PE} \rceil \cdot (id + 1) - 1, k-1)]$ \Comment{$O(\frac{n}{p})$} 
 
-\State $\delta \gets \boldsymbol{ShortestDistance}(P)$ \Comment{$O(\frac{n}{p})$}
+\State $r \gets \boldsymbol{ShortestDistance}(P)$ \Comment{$O(\frac{n}{p})$}
+
+\State $result \gets \boldsymbol{ReduceMin}(r \at id)$ \Comment{$O(\log p)$}
 
 \EndProcedure
 \end{algorithmic}
