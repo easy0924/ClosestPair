@@ -31,7 +31,7 @@
 \usepackage{amsfonts, amsbsy, amssymb}
 \usepackage{bbm}
 \usepackage{verbatim}
-
+\usepackage{algpseudocode}
 \usepackage{lineno}
 \usepackage{xcolor}
 
@@ -85,6 +85,12 @@
 
 \begin{document}
 
+
+\def\sh{\texttt{\#}}
+\def\pl{\texttt{+}}
+\def\mi{\texttt{-}}
+\def\at{\text{@}}
+
 % change the following line to "ngerman" for German style date and logos
 \selectlanguage{english}
 
@@ -105,8 +111,7 @@
 \begin{itemize}
 \item Given $n$ \textbf{different unordered} points $P = \{p_1,p_2, ... ,p_n\}$ in \textbf{unit square} \\
 $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
-\item Find a pair of points with closest euclidean distance between them
-\item Find any pair if there's a tie.
+\item Find the shortest euclidean distance between any two points
 \end{itemize}
 \end{block}
 \end{frame}
@@ -128,7 +133,7 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 \tikzstyle{st3}=[fill=green,circle,inner sep=1pt]
 
 
-\section{Solution}
+\section{Rabin's Linear Randomized Algorithm}
 \begin{frame}{Algorithm}	
 \begin{columns}
 \column{0.45\textwidth}
@@ -248,7 +253,7 @@ $$p_i = (x_i, y_i) \in (0, 1) \times (0,1) \subset \mathbb{R}^2$$
 	
 	\node<13> at (p3) [st2] {};
 	\node<13> at (p19) [st2] {};
-	\path <13> [draw,thick] (p3) -- node [right]{rst}(p19);
+	\path <13> [draw,thick] (p3) -- node [right]{result}(p19);
 	\end{tikzpicture}
 
 \end{columns}
@@ -404,7 +409,7 @@ Recursively calculate the closest distance on samples $S = \{s_1,...,s_{n^{\frac
 \begin{columns}
 	\column{0.7\textwidth}
 \begin{itemize}\itemsep0pt
-\item[\footnotesize 0] Cell set $H = \emptyset$, Result $rst = \infty$\\
+\item[\footnotesize 0] Cell set $H = \emptyset$, $result = \infty$\\
 						
 \vspace{8pt}
 \item[\footnotesize 1] Choose set $S$ of $n^{\frac{2}{3}}$ samples
@@ -418,7 +423,7 @@ Recursively calculate the closest distance on samples $S = \{s_1,...,s_{n^{\frac
 						\textbf{foreach} $c_1$ \textbf{in} $H$ \textbf{do} \\
 						\hspace{2em} \textbf{foreach} $c_2$ \textbf{in} $\{c_1\} \cup neighbor(c_1)$ \textbf{do} \\
 						\hspace{4em} \textbf{foreach} $(p_i,p_j)$ \textbf{in} $c_1 \times c_2$ \\
-						\hspace{6em} $rst = min(rst, dist(p_i, p_j))$
+						\hspace{6em} $result = min(result, dist(p_i, p_j))$
 \end{itemize}
 
 	\column{0.3\textwidth}
@@ -431,11 +436,81 @@ Recursively calculate the closest distance on samples $S = \{s_1,...,s_{n^{\frac
 		\end{itemize}
 \end{columns}
 \vspace{2ex}
-Runtime: \alert{$O(n)$} with high probability,
-Worst: case $O(n^2)$
+Runtime: $O(n)$ with high probability, worst case: $O(n^2)$
+\end{frame}
+\section{Parallel Algorithm}
+\begin{frame}{Parallelization}
+\begin{itemize}
+\item PRAM, CREW model
+\end{itemize}
+
+\begin{algorithmic}[1]
+\Procedure{Sample}{$\mathbf{in}\:P, id,\;\mathbf{out}\:S$}
+\State $total \gets 0$
+\For{$i \gets \lceil \frac{n}{\sh PE} \rceil \cdot id$ \textbf{to} $min ( \lceil \frac{n}{\sh PE} \rceil \cdot (id + 1) - 1, n-1) $}
+\Comment{$O(\frac{n}{p})$}
+	\State $chosen[i] \gets (\boldsymbol{Random}([0..1]) < n^\frac{2}{3}/n)$
+	\State $total \gets total + chosen[i]$ 
+\EndFor
+
+\State $pos \at id \gets \boldsymbol{PrefixSum}(total \at id)$ \Comment{$O(\log p)$}
+
+\For{$i \gets L\cdot id$ \textbf{to} $min ( L \cdot (id + 1) - 1, n-1) $} \Comment{$O(\frac{n}{p})$}
+	\If {$chosen[i]$}
+	\State $S[\mi \mi pos] \gets P[i]$
+	\EndIf
+\EndFor
+\EndProcedure
+\end{algorithmic}
 \end{frame}
 
 
+\begin{frame}{Parallelization}
+\begin{itemize}
+\item Concurrent hash table (possibly with variable size)
+\item Concurrent read, exclusive write (block the chain)
+\item At most $n$ add operation, constant blocking time for each chain, if elements evenly distributed
+\end{itemize}
+\begin{algorithmic}[1]
+\Procedure{Partition}{$\mathbf{in}\:P, \delta,\;\mathbf{out}\:H$}
+\State $H \gets \emptyset$
+\For{$i \gets \lceil \frac{n}{\sh PE} \rceil\cdot id$ \textbf{to} $min ( \lceil \frac{n}{\sh PE} \rceil \cdot (id + 1) - 1, n-1) $}
+\Comment{$O(\frac{n}{p})$}
+	
+\State $cell \gets (\lfloor \frac{p_i.x}{\delta}\rfloor+1,\lfloor \frac{p_i.y}{\delta}\rfloor+1 )$ 
+\If {$H.\boldsymbol{findCell}(c)$}
+	\State $H.\boldsymbol{addCell}(c)$ \Comment{constant times for each chain}
+\EndIf
+\State $H.\boldsymbol{findCell}(c).\boldsymbol{addPoint}(p_i)$
+\EndFor
+\EndProcedure
+\end{algorithmic}
+
+\end{frame}
+
+\begin{frame}{Parallelization}
+\begin{algorithmic}[1]
+\Procedure{Compute}{$\mathbf{in}\:H, k, id,\;\mathbf{out}\:\delta$}
+\State $pairs \gets 0, pcnt \gets 0$
+\For{$i \gets \lceil \frac{k}{\sh PE} \rceil\cdot id$ \textbf{to} $min ( \lceil \frac{k}{\sh PE} \rceil \cdot (id + 1) - 1, k-1)$}
+\Comment{$O(\frac{k}{p})$}
+	\State $pairs \gets pairs + |H[i]| \cdot |\boldsymbol{Neighbor}(H[i])|$
+\EndFor
+\State $total \gets \boldsymbol{ReduceSum}(paris@id)$ \Comment{$O(\log p)$}
+\If {$pairs > 0$}
+	\State $pcnt \gets min (1, \lfloor \frac{pairs}{total} \rfloor) \cdot \sh PE$
+\EndIf
+\State $pre\_pcnt \at id \gets \boldsymbol{PrefixSum}(pcnt \at id)$\Comment{$O(\log p)$}
+
+\State $id' \gets \boldsymbol{BinarySearch}(id, pre\_pcnt \at [0..\sh PE-1])$ \Comment{$O(\log p)$} 
+
+\State $P \gets$ the $(pre\_pcnt \at id' - id + 1)$-th portion of pairs from $H[\lceil \frac{k}{\sh PE} \rceil\cdot id']$ to $H[min ( \lceil \frac{k}{\sh PE} \rceil \cdot (id + 1) - 1, k-1)]$ \Comment{$O(\frac{n}{p})$} 
+
+\State $\delta \gets \boldsymbol{ShortestDistance}(P)$ \Comment{$O(\frac{n}{p})$}
+
+\EndProcedure
+\end{algorithmic}
+\end{frame}
 
 
 \setlength{\columnsep}{-10cm}
@@ -446,7 +521,7 @@ Worst: case $O(n^2)$
 \small
 	\column{0.84\textwidth}
 \begin{itemize}\itemsep0pt
-\item[\footnotesize 0] Cell set $H = \emptyset$, Result $rst = \infty$ \alert{\#\# $H$ synchronized Hashmap} \\
+\item[\footnotesize 0] Cell set $H = \emptyset$, $result = \infty$ \alert{\#\# $H$ concurrent Hashmap} \\
 						
 \vspace{8pt}
 \item[\footnotesize 1] 
@@ -459,24 +534,61 @@ Choose set $S$ of $n^{\frac{2}{3}}$ samples \alert{\#\# allocate $p$ PEs}\\
 \item[\footnotesize 3] %$result = arg$ $min (dist(x,y))$		
 						\textbf{foreach} $c_1$ \textbf{in} $H$ \textbf{do} \\
 						\hspace{2em} \textbf{foreach} $c_2$ \textbf{in} $\{c_1\} \cup neighbor(c_1)$ \textbf{do} \\
-						\hspace{4em} \textbf{foreach} $(p_i,p_j)$ \textbf{in} $c_1 \times c_2$ \alert{\#\# allocate $\lfloor p \cdot \frac{\#Pairs}{|c_1||c_2|}\rfloor$ PEs}\\
-						\hspace{6em} $rst = min(rst, dist(p_i, p_j))$
+						\hspace{4em} \textbf{foreach} $(p_i,p_j)$ \textbf{in} $c_1 \times c_2$ \\%\alert{\#\# allocate $\lfloor p \cdot \frac{\#Pairs}{|c_1||c_2|}\rfloor$ PEs}\\
+						\hspace{6em} $result = min(result, dist(p_i, p_j))$
 \end{itemize}
 
 	\column{0.4\textwidth}
 		\begin{itemize}\itemsep0pt
 			\item[]  
 			\vspace{8pt}
-			\item[]$O(\frac{n^{\frac{2}{3}}}{p})$\\ $O(\frac{n^{\frac{8}{9}}}{p} + \log p)$ \\ 					
+			\item[]$O(\frac{n}{p} + \log p)$\\ $O(\frac{n^{\frac{8}{9}}}{p} + \log p)$ \\ 					
 			\item[]$O(\frac{n}{p})$\\\textcolor{white}{$|$} \\\textcolor{white}{$|$} \\ \textcolor{white}{$|$}\\  \textcolor{white}{$|$}\\
 			\item[]$O(\frac{n}{p} + \log p)$\\\textcolor{white}{$|$} \\ \textcolor{white}{$|$} \\\textcolor{white}{$|$}\\
 		\end{itemize}
 \end{columns}
 \vspace{2ex}
-Total runtime: $O(\frac{n}{p} + \boldsymbol{\log p})$ \alert{\#\# factor $\log p$ for collecting distances}
+Total runtime: $O(\frac{n}{p} +\log p)$
+\end{frame}
+
+%
+%\begin{frame}{Q \& A}
+%\begin{center}
+%\Large{\textbf{Thank You for Your Attention}}
+%\end{center}
+%\end{frame}
+
+\appendix
+\beginbackup
+
+\nocite{major}
+\nocite{dietzfelbinger1997reliable}
+\nocite{fortune1978note}
+\nocite{chap13}
+\nocite{web}
+\nocite{web2}
+\nocite{web3}
+\nocite{web4}
+\nocite{khuller1995simple}
+\nocite{Bentley:1976:DMS:800113.803652}
+\nocite{chor1989power}
+
+
+\section{Reference}
+\begin{frame}[allowframebreaks]{Reference}
+\printbibliography
 \end{frame}
 
 
+
+%\begin{frame}{Load Balancing in Step 3}
+%testc
+%\end{frame}
+%
+%\begin{frame}{Implementation of Hashing}
+%
+%\end{frame}
+\section{A Proof for the Runtime}
 \begin{frame}{Proof Sketch}
 	\begin{theorem}
 		Let $G_i$ with $1\leq i \leq k$ be the \textbf{$\boldsymbol{i}$-th} non-empty cell and $c, d$ some positive constants, then 
@@ -484,7 +596,7 @@ Total runtime: $O(\frac{n}{p} + \boldsymbol{\log p})$ \alert{\#\# factor $\log p
 	\end{theorem}
 \end{frame}
 
-\section{A Proof for the Runtime}
+
 \begin{frame}{Proof Sketch}
 \begin{block}{Sampling Lemma}
 Let $G = \{G_1, G_2,...,G_k\}$ be a partition of set $P$, for which $N(D) \geq n$, where
@@ -639,42 +751,5 @@ N(G_{\delta})  &\leq 16N(G_{2\delta^*}) + 6n \\
 \end{proof}
 
 \end{frame}
-
-%
-%\begin{frame}{Q \& A}
-%\begin{center}
-%\Large{\textbf{Thank You for Your Attention}}
-%\end{center}
-%\end{frame}
-
-\appendix
-\beginbackup
-
-\nocite{major}
-\nocite{dietzfelbinger1997reliable}
-\nocite{fortune1978note}
-\nocite{chap13}
-\nocite{web}
-\nocite{web2}
-\nocite{web3}
-\nocite{khuller1995simple}
-\nocite{Bentley:1976:DMS:800113.803652}
-\nocite{chor1989power}
-
-\begin{frame}[allowframebreaks]{Reference}
-\printbibliography
-\end{frame}
-
-
-%\begin{frame}{Load Balancing in Step 3}
-%testc
-%\end{frame}
-%
-%\begin{frame}{Implementation of Hashing}
-%
-%\end{frame}
-
-
 \backupend
-
 \end{document}

@@ -48,8 +48,18 @@
 }
 
 @online{web3,
+  title = {Closest Pair of Points Problem},
   url={http://en.wikipedia.org/wiki/Closest_pair_of_points_problem/},
   urldata = {2013-07-15}
+}
+
+@online{web4,
+  title = {Java theory and practice: Building a better HashMap},
+  url={http://www.ibm.com/developerworks/java/library/j-jtp08223/index.html/},
+  urldata = {2013-07-24},
+  year = {2003},
+  month = {August},
+  author = {Brian Goetz}
 }
 
 @inproceedings{Bentley:1976:DMS:800113.803652,
